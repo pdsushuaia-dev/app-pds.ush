@@ -1,4 +1,5 @@
 import { RoleNav } from "@/components/RoleNav";
+import { PushRegistrar } from "@/components/PushRegistrar";
 import { getProfile } from "@/lib/auth";
 
 const items = [
@@ -13,6 +14,7 @@ export default async function ClienteLayout({ children }: { children: React.Reac
   const profile = await getProfile();
   return (
     <div className="flex min-h-dvh flex-col md:flex-row">
+      <PushRegistrar />
       <RoleNav title="Cliente" items={items} userName={profile?.full_name} />
       <main className="flex-1 p-6">{children}</main>
     </div>

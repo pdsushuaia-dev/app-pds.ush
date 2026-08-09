@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import type { TimeSlot } from "@/lib/types/database";
 import { slotLabel } from "@/lib/turnos";
+import { EnableNotifications } from "@/components/EnableNotifications";
 import { StartWalkButton } from "./start-walk-button";
 
 const dateFmt = new Intl.DateTimeFormat("es-AR", {
@@ -75,6 +76,8 @@ export default async function PaseadorHome() {
           Tus paseos asignados. Iniciá el paseo cuando retires al perro.
         </p>
       </div>
+
+      <EnableNotifications />
 
       {groups.length === 0 ? (
         <div className="rounded-xl border border-dashed border-neutral-300 p-8 text-center text-sm text-neutral-500 dark:border-neutral-700">

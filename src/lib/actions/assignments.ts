@@ -2,11 +2,20 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { sendPushToUser } from "@/lib/push";
+import { slotLabel } from "@/lib/turnos";
 
 export interface AssignState {
   ok?: boolean;
   error?: string;
 }
+
+const pushDateFmt = new Intl.DateTimeFormat("es-AR", {
+  timeZone: "America/Argentina/Ushuaia",
+  weekday: "short",
+  day: "numeric",
+  month: "short",
+});
 
 /**
  * Asigna (o desasigna con walkerId=null) un paseador a un turno.
@@ -58,6 +67,29 @@ export async function assignWalker(
       return { error: "Ese paseador ya tiene un turno a esa hora." };
     }
     return { error: error.message };
+  }
+
+  // Push al paseador recién asignado (un fallo no rompe la asignación).
+  if (walkerId) {
+    const { data: apptRaw } = await supabase
+      .from("appointments")
+      .select("scheduled_at, time_slot, dogs(name)")
+      .eq("id", appointmentId)
+      .maybeSingle();
+    const appt = apptRaw as {
+      scheduled_at: string;
+      time_slot: "morning" | "midday" | "afternoon" | null;
+      dogs: { name: string } | null;
+    } | null;
+    if (appt) {
+      const fecha = pushDateFmt.format(new Date(appt.scheduled_at));
+      const perro = appt.dogs?.name ?? "Un perro";
+      await sendPushToUser(walkerId, {
+        title: "Nuevo paseo asignado",
+        body: `${perro} · ${fecha} ${slotLabel(appt.time_slot)}`,
+        url: "/paseador",
+      });
+    }
   }
 
   revalidatePath("/admin/turnos");

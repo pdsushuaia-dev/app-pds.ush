@@ -70,6 +70,17 @@ export type Appointment = {
   scheduled_at: string;
   time_slot: TimeSlot | null;
   status: AppointmentStatus;
+  reminded_at: string | null;
+  created_at: string;
+}
+
+export type PushSubscriptionRow = {
+  id: string;
+  user_id: string;
+  endpoint: string;
+  p256dh: string;
+  auth: string;
+  user_agent: string | null;
   created_at: string;
 }
 
@@ -150,6 +161,7 @@ export type Database = {
       announcements: { Row: Announcement; Insert: Partial<Announcement>; Update: Partial<Announcement>; Relationships: [] };
       payments: { Row: Payment; Insert: Partial<Payment>; Update: Partial<Payment>; Relationships: [] };
       walker_invites: { Row: WalkerInvite; Insert: Partial<WalkerInvite> & { code: string }; Update: Partial<WalkerInvite>; Relationships: [] };
+      push_subscriptions: { Row: PushSubscriptionRow; Insert: Partial<PushSubscriptionRow> & { user_id: string; endpoint: string; p256dh: string; auth: string }; Update: Partial<PushSubscriptionRow>; Relationships: [] };
     };
     Views: Record<string, never>;
     Functions: {
