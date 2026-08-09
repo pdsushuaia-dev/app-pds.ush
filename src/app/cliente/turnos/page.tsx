@@ -29,7 +29,7 @@ export default async function TurnosPage() {
   const supabase = await createClient();
   const nowISO = new Date().toISOString();
 
-  const [subsRes, rulesRes, apptsRes] = await Promise.all([
+  const [subsRes, rulesRes, apptsRes, liveRes] = await Promise.all([
     supabase
       .from("subscriptions")
       .select("id, dog_id, dogs(name), plans(name, days_per_week)")
@@ -41,11 +41,20 @@ export default async function TurnosPage() {
       .select("*, dogs(name)")
       .gte("scheduled_at", nowISO)
       .order("scheduled_at", { ascending: true }),
+    // Paseo en curso (RLS lo limita a los perros del dueño).
+    supabase
+      .from("walks")
+      .select("id, dogs(name)")
+      .eq("status", "in_progress"),
   ]);
 
   const subs = (subsRes.data ?? []) as unknown as SubRow[];
   const rules = (rulesRes.data ?? []) as ScheduleRule[];
   const appts = (apptsRes.data ?? []) as unknown as ApptRow[];
+  const liveWalks = (liveRes.data ?? []) as unknown as {
+    id: string;
+    dogs: { name: string } | null;
+  }[];
 
   // Reglas por suscripción.
   const rulesBySub = new Map<string, { weekday: number; timeSlot: TimeSlot }[]>();
@@ -78,6 +87,22 @@ export default async function TurnosPage() {
           próximas 4 semanas; el paseador se asigna después.
         </p>
       </div>
+
+      {/* Paseo en curso */}
+      {liveWalks.map((w) => (
+        <Link
+          key={w.id}
+          href={`/cliente/paseo/${w.id}`}
+          className="flex items-center justify-between gap-3 rounded-xl border border-green-300 bg-green-50 px-4 py-3 text-sm dark:border-green-800 dark:bg-green-950"
+        >
+          <span className="font-medium text-green-800 dark:text-green-200">
+            🟢 {w.dogs?.name ?? "Tu perro"} está de paseo ahora
+          </span>
+          <span className="rounded-lg bg-green-600 px-3 py-1.5 text-xs font-medium text-white">
+            Ver en vivo
+          </span>
+        </Link>
+      ))}
 
       {/* Mi agenda semanal */}
       <section>
