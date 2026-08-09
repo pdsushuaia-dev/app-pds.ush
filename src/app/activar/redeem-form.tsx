@@ -1,0 +1,37 @@
+"use client";
+
+import { useActionState } from "react";
+import { redeemInviteAction, type RedeemState } from "@/lib/actions/invites";
+
+const initial: RedeemState = {};
+
+export function RedeemForm() {
+  const [state, formAction, pending] = useActionState(redeemInviteAction, initial);
+
+  return (
+    <form action={formAction} className="mt-6 flex flex-col gap-3">
+      <input
+        name="code"
+        placeholder="Código (ej. K7M2P9QX)"
+        autoComplete="off"
+        autoCapitalize="characters"
+        required
+        className="rounded-lg border border-neutral-300 px-3 py-2 text-center font-mono text-lg tracking-widest uppercase dark:border-neutral-700 dark:bg-neutral-900"
+      />
+
+      {state.error ? (
+        <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
+          {state.error}
+        </p>
+      ) : null}
+
+      <button
+        type="submit"
+        disabled={pending}
+        className="rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-60 dark:bg-white dark:text-neutral-900"
+      >
+        {pending ? "Activando…" : "Activar mi cuenta de paseador"}
+      </button>
+    </form>
+  );
+}

@@ -155,6 +155,7 @@ export type Database = {
     Functions: {
       user_role: { Args: Record<string, never>; Returns: string };
       is_admin: { Args: Record<string, never>; Returns: boolean };
+      redeem_walker_invite: { Args: { invite_code: string }; Returns: string };
     };
     Enums: Record<string, never>;
   };
