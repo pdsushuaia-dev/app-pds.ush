@@ -39,8 +39,8 @@ export interface Dog {
 export interface Plan {
   id: string;
   name: string;
-  days_per_week: number;
-  price: number;
+  days_per_week: number | null; // null = plan personalizado (días a convenir)
+  price: number | null; // null = precio a convenir
   active: boolean;
   created_at: string;
 }
@@ -137,7 +137,7 @@ export interface Database {
     Tables: {
       profiles: { Row: Profile; Insert: Partial<Profile> & { id: string }; Update: Partial<Profile> };
       dogs: { Row: Dog; Insert: Partial<Dog> & { owner_id: string; name: string }; Update: Partial<Dog> };
-      plans: { Row: Plan; Insert: Partial<Plan> & { name: string; days_per_week: number }; Update: Partial<Plan> };
+      plans: { Row: Plan; Insert: Partial<Plan> & { name: string }; Update: Partial<Plan> };
       subscriptions: { Row: Subscription; Insert: Partial<Subscription> & { dog_id: string }; Update: Partial<Subscription> };
       schedule_rules: { Row: ScheduleRule; Insert: Partial<ScheduleRule> & { subscription_id: string; weekday: number; time_of_day: string }; Update: Partial<ScheduleRule> };
       appointments: { Row: Appointment; Insert: Partial<Appointment> & { dog_id: string; scheduled_at: string }; Update: Partial<Appointment> };
