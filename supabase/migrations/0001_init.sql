@@ -23,7 +23,8 @@ create table if not exists profiles (
 );
 
 -- Helper: rol del usuario actual (SECURITY DEFINER evita recursión en RLS)
-create or replace function public.current_role()
+-- Nota: NO se puede llamar 'current_role' — es palabra reservada de Postgres.
+create or replace function public.user_role()
 returns text
 language sql
 stable
@@ -84,7 +85,7 @@ create index if not exists dogs_owner_idx on dogs(owner_id);
 create table if not exists plans (
   id            uuid primary key default gen_random_uuid(),
   name          text not null,
-  days_per_week int not null check (days_per_week between 2 and 6),
+  days_per_week int not null unique check (days_per_week between 2 and 6),
   price         numeric(10,2) not null default 0,
   active        boolean not null default true,
   created_at    timestamptz not null default now()

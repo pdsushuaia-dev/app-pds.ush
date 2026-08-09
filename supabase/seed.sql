@@ -5,4 +5,4 @@ insert into plans (name, days_per_week, price) values
   ('Plan 4 días',  4, 0),
   ('Plan 5 días',  5, 0),
   ('Plan 6 días',  6, 0)
-on conflict do nothing;
+on conflict (days_per_week) do nothing;

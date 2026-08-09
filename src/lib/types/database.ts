@@ -150,7 +150,7 @@ export interface Database {
     };
     Views: Record<string, never>;
     Functions: {
-      current_role: { Args: Record<string, never>; Returns: string };
+      user_role: { Args: Record<string, never>; Returns: string };
       is_admin: { Args: Record<string, never>; Returns: boolean };
     };
     Enums: Record<string, never>;
