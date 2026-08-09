@@ -15,6 +15,7 @@ export type SubscriptionStatus = "active" | "paused" | "overdue" | "canceled";
 export type AppointmentStatus = "scheduled" | "done" | "canceled";
 export type WalkStatus = "in_progress" | "done" | "canceled";
 export type PaymentStatus = "pending" | "paid" | "overdue" | "canceled";
+export type TimeSlot = "morning" | "midday" | "afternoon";
 
 export type Profile = {
   id: string;
@@ -58,7 +59,8 @@ export type ScheduleRule = {
   id: string;
   subscription_id: string;
   weekday: number; // 0=domingo ... 6=sábado
-  time_of_day: string; // 'HH:MM:SS'
+  time_slot: TimeSlot | null;
+  time_of_day: string | null; // legacy, sin uso (reemplazado por time_slot)
 }
 
 export type Appointment = {
@@ -66,6 +68,7 @@ export type Appointment = {
   dog_id: string;
   walker_id: string | null;
   scheduled_at: string;
+  time_slot: TimeSlot | null;
   status: AppointmentStatus;
   created_at: string;
 }
@@ -139,7 +142,7 @@ export type Database = {
       dogs: { Row: Dog; Insert: Partial<Dog> & { owner_id: string; name: string }; Update: Partial<Dog>; Relationships: [] };
       plans: { Row: Plan; Insert: Partial<Plan> & { name: string }; Update: Partial<Plan>; Relationships: [] };
       subscriptions: { Row: Subscription; Insert: Partial<Subscription> & { dog_id: string }; Update: Partial<Subscription>; Relationships: [] };
-      schedule_rules: { Row: ScheduleRule; Insert: Partial<ScheduleRule> & { subscription_id: string; weekday: number; time_of_day: string }; Update: Partial<ScheduleRule>; Relationships: [] };
+      schedule_rules: { Row: ScheduleRule; Insert: Partial<ScheduleRule> & { subscription_id: string; weekday: number }; Update: Partial<ScheduleRule>; Relationships: [] };
       appointments: { Row: Appointment; Insert: Partial<Appointment> & { dog_id: string; scheduled_at: string }; Update: Partial<Appointment>; Relationships: [] };
       walks: { Row: Walk; Insert: Partial<Walk> & { walker_id: string; dog_id: string }; Update: Partial<Walk>; Relationships: [] };
       walk_positions: { Row: WalkPosition; Insert: Partial<WalkPosition> & { walk_id: string; lat: number; lng: number }; Update: Partial<WalkPosition>; Relationships: [] };
