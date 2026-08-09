@@ -4,6 +4,7 @@ import { getProfile } from "@/lib/auth";
 const items = [
   { href: "/cliente", label: "Inicio" },
   { href: "/cliente/perros", label: "Mis perros" },
+  { href: "/cliente/planes", label: "Planes" },
   { href: "/cliente/turnos", label: "Turnos" },
   { href: "/cliente/pagos", label: "Pagos" },
 ];
