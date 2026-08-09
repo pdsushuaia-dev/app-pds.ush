@@ -16,7 +16,7 @@ export type AppointmentStatus = "scheduled" | "done" | "canceled";
 export type WalkStatus = "in_progress" | "done" | "canceled";
 export type PaymentStatus = "pending" | "paid" | "overdue" | "canceled";
 
-export interface Profile {
+export type Profile = {
   id: string;
   role: Role;
   full_name: string | null;
@@ -25,7 +25,7 @@ export interface Profile {
   created_at: string;
 }
 
-export interface Dog {
+export type Dog = {
   id: string;
   owner_id: string;
   name: string;
@@ -36,7 +36,7 @@ export interface Dog {
   created_at: string;
 }
 
-export interface Plan {
+export type Plan = {
   id: string;
   name: string;
   days_per_week: number | null; // null = plan personalizado (días a convenir)
@@ -45,7 +45,7 @@ export interface Plan {
   created_at: string;
 }
 
-export interface Subscription {
+export type Subscription = {
   id: string;
   dog_id: string;
   plan_id: string | null;
@@ -54,14 +54,14 @@ export interface Subscription {
   created_at: string;
 }
 
-export interface ScheduleRule {
+export type ScheduleRule = {
   id: string;
   subscription_id: string;
   weekday: number; // 0=domingo ... 6=sábado
   time_of_day: string; // 'HH:MM:SS'
 }
 
-export interface Appointment {
+export type Appointment = {
   id: string;
   dog_id: string;
   walker_id: string | null;
@@ -70,7 +70,7 @@ export interface Appointment {
   created_at: string;
 }
 
-export interface Walk {
+export type Walk = {
   id: string;
   appointment_id: string | null;
   walker_id: string;
@@ -83,7 +83,7 @@ export interface Walk {
   created_at: string;
 }
 
-export interface WalkPosition {
+export type WalkPosition = {
   id: number;
   walk_id: string;
   lat: number;
@@ -91,7 +91,7 @@ export interface WalkPosition {
   recorded_at: string;
 }
 
-export interface Review {
+export type Review = {
   id: string;
   client_id: string;
   dog_id: string | null;
@@ -100,7 +100,7 @@ export interface Review {
   created_at: string;
 }
 
-export interface Announcement {
+export type Announcement = {
   id: string;
   title: string | null;
   body: string | null;
@@ -109,7 +109,7 @@ export interface Announcement {
   created_at: string;
 }
 
-export interface Payment {
+export type Payment = {
   id: string;
   subscription_id: string | null;
   amount: number | null;
@@ -119,7 +119,7 @@ export interface Payment {
   created_at: string;
 }
 
-export interface WalkerInvite {
+export type WalkerInvite = {
   id: string;
   code: string;
   created_by: string | null;
@@ -132,21 +132,21 @@ export interface WalkerInvite {
  * Tipo `Database` compatible con @supabase/ssr.
  * Provisorio: reemplazar por los tipos generados cuando exista el proyecto.
  */
-export interface Database {
+export type Database = {
   public: {
     Tables: {
-      profiles: { Row: Profile; Insert: Partial<Profile> & { id: string }; Update: Partial<Profile> };
-      dogs: { Row: Dog; Insert: Partial<Dog> & { owner_id: string; name: string }; Update: Partial<Dog> };
-      plans: { Row: Plan; Insert: Partial<Plan> & { name: string }; Update: Partial<Plan> };
-      subscriptions: { Row: Subscription; Insert: Partial<Subscription> & { dog_id: string }; Update: Partial<Subscription> };
-      schedule_rules: { Row: ScheduleRule; Insert: Partial<ScheduleRule> & { subscription_id: string; weekday: number; time_of_day: string }; Update: Partial<ScheduleRule> };
-      appointments: { Row: Appointment; Insert: Partial<Appointment> & { dog_id: string; scheduled_at: string }; Update: Partial<Appointment> };
-      walks: { Row: Walk; Insert: Partial<Walk> & { walker_id: string; dog_id: string }; Update: Partial<Walk> };
-      walk_positions: { Row: WalkPosition; Insert: Partial<WalkPosition> & { walk_id: string; lat: number; lng: number }; Update: Partial<WalkPosition> };
-      reviews: { Row: Review; Insert: Partial<Review> & { client_id: string; rating: number }; Update: Partial<Review> };
-      announcements: { Row: Announcement; Insert: Partial<Announcement>; Update: Partial<Announcement> };
-      payments: { Row: Payment; Insert: Partial<Payment>; Update: Partial<Payment> };
-      walker_invites: { Row: WalkerInvite; Insert: Partial<WalkerInvite> & { code: string }; Update: Partial<WalkerInvite> };
+      profiles: { Row: Profile; Insert: Partial<Profile> & { id: string }; Update: Partial<Profile>; Relationships: [] };
+      dogs: { Row: Dog; Insert: Partial<Dog> & { owner_id: string; name: string }; Update: Partial<Dog>; Relationships: [] };
+      plans: { Row: Plan; Insert: Partial<Plan> & { name: string }; Update: Partial<Plan>; Relationships: [] };
+      subscriptions: { Row: Subscription; Insert: Partial<Subscription> & { dog_id: string }; Update: Partial<Subscription>; Relationships: [] };
+      schedule_rules: { Row: ScheduleRule; Insert: Partial<ScheduleRule> & { subscription_id: string; weekday: number; time_of_day: string }; Update: Partial<ScheduleRule>; Relationships: [] };
+      appointments: { Row: Appointment; Insert: Partial<Appointment> & { dog_id: string; scheduled_at: string }; Update: Partial<Appointment>; Relationships: [] };
+      walks: { Row: Walk; Insert: Partial<Walk> & { walker_id: string; dog_id: string }; Update: Partial<Walk>; Relationships: [] };
+      walk_positions: { Row: WalkPosition; Insert: Partial<WalkPosition> & { walk_id: string; lat: number; lng: number }; Update: Partial<WalkPosition>; Relationships: [] };
+      reviews: { Row: Review; Insert: Partial<Review> & { client_id: string; rating: number }; Update: Partial<Review>; Relationships: [] };
+      announcements: { Row: Announcement; Insert: Partial<Announcement>; Update: Partial<Announcement>; Relationships: [] };
+      payments: { Row: Payment; Insert: Partial<Payment>; Update: Partial<Payment>; Relationships: [] };
+      walker_invites: { Row: WalkerInvite; Insert: Partial<WalkerInvite> & { code: string }; Update: Partial<WalkerInvite>; Relationships: [] };
     };
     Views: Record<string, never>;
     Functions: {
