@@ -3,6 +3,7 @@ import { getProfile } from "@/lib/auth";
 
 const items = [
   { href: "/admin", label: "Dashboard" },
+  { href: "/admin/turnos", label: "Turnos" },
   { href: "/admin/paseadores", label: "Paseadores" },
   { href: "/admin/planes", label: "Planes" },
   { href: "/admin/clientes", label: "Clientes" },
