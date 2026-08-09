@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { APP_NAME } from "@/lib/constants";
+import { LogoutButton } from "@/components/LogoutButton";
 
 export interface NavItem {
   href: string;
@@ -12,12 +13,14 @@ export interface NavItem {
 export function RoleNav({
   title,
   items,
+  userName,
 }: {
   title: string;
   items: NavItem[];
+  userName?: string | null;
 }) {
   return (
-    <aside className="w-full shrink-0 border-b border-black/10 bg-white md:h-dvh md:w-60 md:border-b-0 md:border-r dark:border-white/10 dark:bg-neutral-950">
+    <aside className="flex w-full shrink-0 flex-col border-b border-black/10 bg-white md:h-dvh md:w-60 md:border-b-0 md:border-r dark:border-white/10 dark:bg-neutral-950">
       <div className="p-4">
         <Link href="/" className="text-lg font-bold">
           {APP_NAME}
@@ -26,7 +29,8 @@ export function RoleNav({
           {title}
         </p>
       </div>
-      <nav className="flex gap-1 overflow-x-auto px-2 pb-2 md:flex-col md:gap-0.5">
+
+      <nav className="flex gap-1 overflow-x-auto px-2 pb-2 md:flex-1 md:flex-col md:gap-0.5">
         {items.map((item) => (
           <Link
             key={item.href}
@@ -37,6 +41,13 @@ export function RoleNav({
           </Link>
         ))}
       </nav>
+
+      <div className="hidden border-t border-black/10 p-2 md:block dark:border-white/10">
+        {userName ? (
+          <p className="truncate px-3 py-1 text-xs text-neutral-500">{userName}</p>
+        ) : null}
+        <LogoutButton />
+      </div>
     </aside>
   );
 }

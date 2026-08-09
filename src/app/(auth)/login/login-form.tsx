@@ -2,38 +2,26 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
-import { signUpAction, type AuthState } from "@/lib/actions/auth";
+import { signInAction, type AuthState } from "@/lib/actions/auth";
 import { APP_NAME } from "@/lib/constants";
 
 const initial: AuthState = {};
 
-export default function RegistroPage() {
-  const [state, formAction, pending] = useActionState(signUpAction, initial);
+export function LoginForm({ redirect = "" }: { redirect?: string }) {
+  const [state, formAction, pending] = useActionState(signInAction, initial);
 
   return (
     <main className="mx-auto flex min-h-dvh max-w-sm flex-col justify-center px-6">
       <Link href="/" className="mb-8 text-center text-lg font-bold">
         {APP_NAME}
       </Link>
-      <h1 className="text-2xl font-semibold">Crear cuenta</h1>
+      <h1 className="text-2xl font-semibold">Ingresar</h1>
       <p className="mt-1 text-sm text-neutral-500">
-        Registrate como cliente para agendar los paseos de tu perro.
+        Accedé con tu email y contraseña.
       </p>
 
       <form action={formAction} className="mt-6 flex flex-col gap-3">
-        <input
-          name="full_name"
-          placeholder="Nombre completo"
-          autoComplete="name"
-          required
-          className="rounded-lg border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
-        />
-        <input
-          name="phone"
-          placeholder="Teléfono"
-          autoComplete="tel"
-          className="rounded-lg border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
-        />
+        <input type="hidden" name="redirect" value={redirect} />
         <input
           name="email"
           type="email"
@@ -45,8 +33,8 @@ export default function RegistroPage() {
         <input
           name="password"
           type="password"
-          placeholder="Contraseña (mín. 6 caracteres)"
-          autoComplete="new-password"
+          placeholder="Contraseña"
+          autoComplete="current-password"
           required
           className="rounded-lg border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
         />
@@ -56,25 +44,20 @@ export default function RegistroPage() {
             {state.error}
           </p>
         ) : null}
-        {state.message ? (
-          <p className="rounded-md bg-green-50 px-3 py-2 text-sm text-green-700 dark:bg-green-950 dark:text-green-300">
-            {state.message}
-          </p>
-        ) : null}
 
         <button
           type="submit"
           disabled={pending}
           className="rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-60 dark:bg-white dark:text-neutral-900"
         >
-          {pending ? "Creando cuenta…" : "Crear cuenta"}
+          {pending ? "Ingresando…" : "Ingresar"}
         </button>
       </form>
 
       <p className="mt-6 text-center text-sm text-neutral-500">
-        ¿Ya tenés cuenta?{" "}
-        <Link href="/login" className="underline">
-          Ingresá
+        ¿No tenés cuenta?{" "}
+        <Link href="/registro" className="underline">
+          Registrate
         </Link>
       </p>
     </main>
