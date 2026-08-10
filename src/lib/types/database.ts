@@ -107,8 +107,10 @@ export type WalkPosition = {
 
 export type Review = {
   id: string;
+  walk_id: string;
+  dog_id: string;
   client_id: string;
-  dog_id: string | null;
+  walker_id: string | null;
   rating: number;
   comment: string | null;
   created_at: string;
@@ -157,7 +159,7 @@ export type Database = {
       appointments: { Row: Appointment; Insert: Partial<Appointment> & { dog_id: string; scheduled_at: string }; Update: Partial<Appointment>; Relationships: [] };
       walks: { Row: Walk; Insert: Partial<Walk> & { walker_id: string; dog_id: string }; Update: Partial<Walk>; Relationships: [] };
       walk_positions: { Row: WalkPosition; Insert: Partial<WalkPosition> & { walk_id: string; lat: number; lng: number }; Update: Partial<WalkPosition>; Relationships: [] };
-      reviews: { Row: Review; Insert: Partial<Review> & { client_id: string; rating: number }; Update: Partial<Review>; Relationships: [] };
+      reviews: { Row: Review; Insert: Partial<Review> & { walk_id: string; dog_id: string; client_id: string; rating: number }; Update: Partial<Review>; Relationships: [] };
       announcements: { Row: Announcement; Insert: Partial<Announcement>; Update: Partial<Announcement>; Relationships: [] };
       payments: { Row: Payment; Insert: Partial<Payment>; Update: Partial<Payment>; Relationships: [] };
       walker_invites: { Row: WalkerInvite; Insert: Partial<WalkerInvite> & { code: string }; Update: Partial<WalkerInvite>; Relationships: [] };

@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { LatLng } from "@/lib/geo/haversine";
 import type { WalkStatus } from "@/lib/types/database";
 import { LiveWalkView } from "./live-walk-view";
+import { ReviewForm } from "./review-form";
 
 export default async function ClientePaseoPage({
   params,
@@ -35,7 +36,7 @@ export default async function ClientePaseoPage({
 
   if (!walk) redirect("/cliente/turnos");
 
-  const [dogRes, posRes] = await Promise.all([
+  const [dogRes, posRes, reviewRes] = await Promise.all([
     supabase
       .from("dogs")
       .select("name, photo_url")
@@ -46,23 +47,31 @@ export default async function ClientePaseoPage({
       .select("lat, lng")
       .eq("walk_id", walkId)
       .order("recorded_at", { ascending: true }),
+    supabase.from("reviews").select("id").eq("walk_id", walkId).maybeSingle(),
   ]);
 
   const dog = dogRes.data as { name: string; photo_url: string | null } | null;
   const initialPositions = ((posRes.data ?? []) as { lat: number; lng: number }[]).map(
     (p): LatLng => ({ lat: p.lat, lng: p.lng })
   );
+  const alreadyReviewed = Boolean(reviewRes.data);
 
   return (
-    <LiveWalkView
-      walkId={walk.id}
-      dogName={dog?.name ?? "Tu perro"}
-      dogPhoto={dog?.photo_url ?? null}
-      initialPositions={initialPositions}
-      status={walk.status}
-      startedAt={walk.started_at}
-      distanceM={walk.distance_m}
-      durationS={walk.duration_s}
-    />
+    <div className="flex flex-col gap-6">
+      <LiveWalkView
+        walkId={walk.id}
+        dogName={dog?.name ?? "Tu perro"}
+        dogPhoto={dog?.photo_url ?? null}
+        initialPositions={initialPositions}
+        status={walk.status}
+        startedAt={walk.started_at}
+        distanceM={walk.distance_m}
+        durationS={walk.duration_s}
+      />
+
+      {walk.status === "done" && !alreadyReviewed ? (
+        <ReviewForm walkId={walk.id} />
+      ) : null}
+    </div>
   );
 }
