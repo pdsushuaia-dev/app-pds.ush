@@ -116,6 +116,17 @@ export type Review = {
   created_at: string;
 }
 
+export type Banner = {
+  id: string;
+  title: string;
+  body: string | null;
+  active: boolean;
+  starts_at: string | null;
+  ends_at: string | null;
+  created_at: string;
+  created_by: string | null;
+}
+
 export type Announcement = {
   id: string;
   title: string | null;
@@ -161,6 +172,7 @@ export type Database = {
       walk_positions: { Row: WalkPosition; Insert: Partial<WalkPosition> & { walk_id: string; lat: number; lng: number }; Update: Partial<WalkPosition>; Relationships: [] };
       reviews: { Row: Review; Insert: Partial<Review> & { walk_id: string; dog_id: string; client_id: string; rating: number }; Update: Partial<Review>; Relationships: [] };
       announcements: { Row: Announcement; Insert: Partial<Announcement>; Update: Partial<Announcement>; Relationships: [] };
+      banners: { Row: Banner; Insert: Partial<Banner> & { title: string }; Update: Partial<Banner>; Relationships: [] };
       payments: { Row: Payment; Insert: Partial<Payment>; Update: Partial<Payment>; Relationships: [] };
       walker_invites: { Row: WalkerInvite; Insert: Partial<WalkerInvite> & { code: string }; Update: Partial<WalkerInvite>; Relationships: [] };
       push_subscriptions: { Row: PushSubscriptionRow; Insert: Partial<PushSubscriptionRow> & { user_id: string; endpoint: string; p256dh: string; auth: string }; Update: Partial<PushSubscriptionRow>; Relationships: [] };
