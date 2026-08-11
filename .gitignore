@@ -40,3 +40,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Datos reales de clientes (no versionar)
+supabase/clientes_referencia.csv
