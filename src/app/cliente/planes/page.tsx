@@ -58,14 +58,14 @@ export default async function PlanesPage() {
           return (
             <div
               key={plan.id}
-              className={`relative flex flex-col rounded-xl border p-5 ${
+              className={`relative flex flex-col rounded-2xl border p-5 ${
                 destacado
-                  ? "border-neutral-900 dark:border-white"
+                  ? "border-brand ring-1 ring-brand"
                   : "border-neutral-200 dark:border-neutral-800"
               }`}
             >
               {destacado ? (
-                <span className="absolute -top-2.5 left-4 rounded-full bg-neutral-900 px-2 py-0.5 text-xs font-medium text-white dark:bg-white dark:text-neutral-900">
+                <span className="absolute -top-2.5 left-4 rounded-full bg-brand px-2 py-0.5 text-xs font-medium text-[#06210f]">
                   Más elegido
                 </span>
               ) : null}

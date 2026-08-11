@@ -1,26 +1,138 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Forzar tema oscuro siempre (identidad PDS: negro + verde estilo Spotify). */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+@theme {
+  --color-bg: #0a0a0a;
+  --color-surface: #171717;
+  --color-surface-2: #1f1f1f;
+  --color-brand: #1db954;
+  --color-brand-hover: #1ed760;
+  --color-accent: #2e7d32;
+  --color-fg: #ffffff;
+  --color-muted: #b3b3b3;
+  --color-border: #2a2a2a;
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  color-scheme: dark;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Foco visible en verde (accesibilidad). */
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+@layer components {
+  /* Card / panel */
+  .card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+  }
+
+  /* Botón primario (pill verde) */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 9999px;
+    background: var(--color-brand);
+    color: #06210f;
+    font-weight: 600;
+    font-size: 0.875rem;
+    padding: 0.5rem 1.25rem;
+    transition: background-color 0.15s ease;
+  }
+  .btn-primary:hover {
+    background: var(--color-brand-hover);
+  }
+  .btn-primary:disabled {
+    opacity: 0.6;
+  }
+
+  /* Botón secundario (borde) */
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 9999px;
+    border: 1px solid var(--color-border);
+    color: var(--color-fg);
+    background: transparent;
+    font-size: 0.875rem;
+    padding: 0.5rem 1.25rem;
+    transition: background-color 0.15s ease;
+  }
+  .btn-secondary:hover {
+    background: var(--color-surface-2);
+  }
+  .btn-secondary:disabled {
+    opacity: 0.6;
+  }
+
+  /* Input / textarea / select */
+  .input {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: var(--color-fg);
+  }
+  .input::placeholder {
+    color: var(--color-muted);
+  }
+  .input:focus {
+    outline: none;
+    border-color: var(--color-brand);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-brand) 40%, transparent);
+  }
+
+  /* Ítems de navegación */
+  .nav-item {
+    display: block;
+    white-space: nowrap;
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+  }
+  .nav-item:hover {
+    background: var(--color-surface-2);
+    color: var(--color-fg);
+  }
+  .nav-item-active {
+    background: color-mix(in srgb, var(--color-brand) 16%, transparent);
+    color: var(--color-brand);
+    font-weight: 500;
+  }
+
+  /* Badge de marca */
+  .badge-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    border-radius: 9999px;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.75rem;
+    background: color-mix(in srgb, var(--color-brand) 16%, transparent);
+    color: var(--color-brand);
+  }
 }

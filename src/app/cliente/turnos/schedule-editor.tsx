@@ -149,7 +149,7 @@ export function ScheduleEditor({
       <button
         type="submit"
         disabled={incompleto || pending}
-        className="self-start rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-60 dark:bg-white dark:text-neutral-900"
+        className="self-start btn-primary"
       >
         {pending ? "Guardando…" : "Guardar agenda"}
       </button>

@@ -11,7 +11,7 @@ export function LogoutButton() {
       type="button"
       disabled={pending}
       onClick={() => startTransition(() => signOutAction())}
-      className="w-full rounded-md px-3 py-2 text-left text-sm text-neutral-500 hover:bg-neutral-100 disabled:opacity-60 dark:hover:bg-neutral-900"
+      className="w-full rounded-md px-3 py-2 text-left text-sm text-muted hover:bg-surface-2 hover:text-fg disabled:opacity-60"
     >
       {pending ? "Saliendo…" : "Cerrar sesión"}
     </button>

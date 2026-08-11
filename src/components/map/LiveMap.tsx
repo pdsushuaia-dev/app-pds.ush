@@ -13,7 +13,7 @@ import type { LiveMapProps } from "./live-map-inner";
 const LiveMapInner = dynamic(() => import("./live-map-inner"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-full w-full items-center justify-center bg-neutral-100 text-sm text-neutral-500 dark:bg-neutral-900">
+    <div className="flex h-full w-full items-center justify-center bg-surface text-sm text-muted">
       Cargando mapa…
     </div>
   ),

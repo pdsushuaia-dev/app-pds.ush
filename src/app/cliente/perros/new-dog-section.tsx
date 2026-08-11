@@ -12,7 +12,7 @@ export function NewDogSection() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white dark:bg-white dark:text-neutral-900"
+        className="btn-primary"
       >
         + Agregar perro
       </button>

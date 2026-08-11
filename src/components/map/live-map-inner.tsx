@@ -4,19 +4,9 @@ import { useEffect, useMemo } from "react";
 import { MapContainer, TileLayer, Marker, Polyline, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import markerIcon from "leaflet/dist/images/marker-icon.png";
-import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
-import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import type { LatLng } from "@/lib/geo/haversine";
 
-// Workaround del ícono default de Leaflet con bundlers (rutas de imágenes).
-type ProtoWithGetIconUrl = { _getIconUrl?: unknown };
-delete (L.Icon.Default.prototype as unknown as ProtoWithGetIconUrl)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconUrl: (markerIcon as { src: string }).src,
-  iconRetinaUrl: (markerIcon2x as { src: string }).src,
-  shadowUrl: (markerShadow as { src: string }).src,
-});
+const BRAND = "#1db954";
 
 export interface LiveMapProps {
   center: LatLng;
@@ -41,12 +31,21 @@ export default function LiveMapInner({
   markerIconUrl,
 }: LiveMapProps) {
   const icon = useMemo(() => {
-    if (!markerIconUrl) return undefined;
+    if (markerIconUrl) {
+      // Foto del perro con borde verde de marca.
+      return L.divIcon({
+        html: `<img src="${markerIconUrl}" alt="" style="width:42px;height:42px;border-radius:9999px;object-fit:cover;border:3px solid ${BRAND};box-shadow:0 1px 6px rgba(0,0,0,.6)"/>`,
+        className: "",
+        iconSize: [42, 42],
+        iconAnchor: [21, 21],
+      });
+    }
+    // Punto verde.
     return L.divIcon({
-      html: `<img src="${markerIconUrl}" alt="" style="width:42px;height:42px;border-radius:9999px;object-fit:cover;border:3px solid #fff;box-shadow:0 1px 6px rgba(0,0,0,.5)"/>`,
+      html: `<div style="width:18px;height:18px;border-radius:9999px;background:${BRAND};border:3px solid #06210f;box-shadow:0 0 0 4px rgba(29,185,84,.35)"></div>`,
       className: "",
-      iconSize: [42, 42],
-      iconAnchor: [21, 21],
+      iconSize: [18, 18],
+      iconAnchor: [9, 9],
     });
   }, [markerIconUrl]);
 
@@ -57,7 +56,9 @@ export default function LiveMapInner({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {marker ? <Marker position={marker} icon={icon} /> : null}
-      {path.length > 1 ? <Polyline positions={path} /> : null}
+      {path.length > 1 ? (
+        <Polyline positions={path} pathOptions={{ color: BRAND, weight: 4 }} />
+      ) : null}
       <Recenter center={center} />
     </MapContainer>
   );

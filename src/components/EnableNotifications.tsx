@@ -124,12 +124,11 @@ export function EnableNotifications() {
 
   if (status === "checking") return null;
 
-  const base =
-    "rounded-xl border px-4 py-3 text-sm border-neutral-200 dark:border-neutral-800";
+  const base = "rounded-2xl border border-border bg-surface px-4 py-3 text-sm";
 
   if (status === "unsupported") {
     return (
-      <div className={`${base} text-neutral-500`}>
+      <div className={`${base} text-muted`}>
         Tu navegador no soporta notificaciones.
       </div>
     );
@@ -137,7 +136,7 @@ export function EnableNotifications() {
 
   if (status === "ios-install") {
     return (
-      <div className={`${base} text-neutral-500`}>
+      <div className={`${base} text-muted`}>
         📲 En iPhone, instalá la app (<b>Compartir → Agregar a inicio</b>) para
         recibir avisos.
       </div>
@@ -146,7 +145,7 @@ export function EnableNotifications() {
 
   if (status === "denied") {
     return (
-      <div className={`${base} text-neutral-500`}>
+      <div className={`${base} text-muted`}>
         Las notificaciones están bloqueadas. Activalas desde los ajustes del
         navegador para este sitio.
       </div>
@@ -157,7 +156,7 @@ export function EnableNotifications() {
     <div className={`${base} flex flex-wrap items-center justify-between gap-3`}>
       <div>
         <p className="font-medium">Notificaciones</p>
-        <p className="text-xs text-neutral-500">
+        <p className="text-xs text-muted">
           {status === "on"
             ? "Activadas — te avisamos de tus paseos."
             : "Activalas para enterarte de tus paseos."}
@@ -171,7 +170,7 @@ export function EnableNotifications() {
           type="button"
           onClick={disable}
           disabled={pending}
-          className="rounded-lg border border-neutral-300 px-3 py-1.5 text-sm disabled:opacity-60 dark:border-neutral-700"
+          className="btn-secondary px-3 py-1.5"
         >
           {pending ? "…" : "Desactivar"}
         </button>
@@ -180,7 +179,7 @@ export function EnableNotifications() {
           type="button"
           onClick={enable}
           disabled={pending}
-          className="rounded-lg bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-60 dark:bg-white dark:text-neutral-900"
+          className="btn-primary px-3 py-1.5"
         >
           {pending ? "Activando…" : "Activar notificaciones"}
         </button>

@@ -4,32 +4,42 @@ import { APP_NAME } from "@/lib/constants";
 export default function Home() {
   return (
     <main className="mx-auto flex min-h-dvh max-w-2xl flex-col items-center justify-center gap-8 px-6 text-center">
-      <div>
-        <h1 className="text-4xl font-bold tracking-tight">{APP_NAME}</h1>
-        <p className="mt-3 text-neutral-500">
-          Gestión de paseos de perros · Ushuaia y Río Grande
-        </p>
+      <div className="flex flex-col items-center gap-4">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/logo.png"
+          alt=""
+          className="size-20 rounded-2xl object-cover shadow-lg"
+        />
+        <div>
+          <h1 className="text-4xl font-bold tracking-tight text-fg">
+            {APP_NAME}
+          </h1>
+          <p className="mt-2 text-muted">
+            Paseadores del Sur Club · Ushuaia y Río Grande
+          </p>
+        </div>
       </div>
 
       <div className="flex flex-wrap justify-center gap-3">
-        <Link
-          href="/login"
-          className="rounded-lg bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white hover:bg-neutral-700 dark:bg-white dark:text-neutral-900"
-        >
+        <Link href="/login" className="btn-primary px-6 py-2.5">
           Ingresar
         </Link>
-        <Link
-          href="/registro"
-          className="rounded-lg border border-neutral-300 px-5 py-2.5 text-sm font-medium hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-900"
-        >
+        <Link href="/registro" className="btn-secondary px-6 py-2.5">
           Registrarme
         </Link>
       </div>
 
-      <div className="grid grid-cols-3 gap-3 text-xs text-neutral-400">
-        <Link href="/cliente" className="hover:underline">Panel Cliente</Link>
-        <Link href="/paseador" className="hover:underline">Panel Paseador</Link>
-        <Link href="/admin" className="hover:underline">Panel Admin</Link>
+      <div className="grid grid-cols-3 gap-3 text-xs text-muted">
+        <Link href="/cliente" className="hover:text-brand">
+          Panel Cliente
+        </Link>
+        <Link href="/paseador" className="hover:text-brand">
+          Panel Paseador
+        </Link>
+        <Link href="/admin" className="hover:text-brand">
+          Panel Admin
+        </Link>
       </div>
     </main>
   );
