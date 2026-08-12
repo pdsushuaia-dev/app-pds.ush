@@ -198,6 +198,19 @@ export type Database = {
         Args: { p_subscription_id: string; p_price: number | null };
         Returns: undefined;
       };
+      client_walk_history: {
+        Args: { p_limit: number };
+        Returns: {
+          walk_id: string;
+          dog_name: string;
+          walker_name: string | null;
+          ended_at: string | null;
+          started_at: string | null;
+          distance_m: number | null;
+          duration_s: number | null;
+          media_count: number;
+        }[];
+      };
     };
     Enums: Record<string, never>;
   };

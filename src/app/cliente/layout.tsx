@@ -7,6 +7,7 @@ const items = [
   { href: "/cliente/perros", label: "Mis perros" },
   { href: "/cliente/planes", label: "Planes" },
   { href: "/cliente/turnos", label: "Turnos" },
+  { href: "/cliente/historial", label: "Historial" },
   { href: "/cliente/pagos", label: "Pagos" },
 ];
 
