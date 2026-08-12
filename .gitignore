@@ -41,5 +41,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Datos reales de clientes (no versionar)
+# Datos reales de clientes/paseadores (no versionar)
 supabase/clientes_referencia.csv
+supabase/paseadores_referencia.csv

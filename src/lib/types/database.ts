@@ -51,6 +51,7 @@ export type Subscription = {
   dog_id: string;
   plan_id: string | null;
   status: SubscriptionStatus;
+  custom_price: number | null; // ARS; null = usa el precio del plan
   start_date: string;
   created_at: string;
 }
@@ -142,7 +143,9 @@ export type Payment = {
   amount: number | null;
   status: PaymentStatus;
   mp_payment_id: string | null;
-  period: string | null;
+  period: string | null; // 'YYYY-MM'
+  method: string | null; // 'manual' por defecto
+  paid_at: string | null;
   created_at: string;
 }
 
@@ -182,6 +185,10 @@ export type Database = {
       user_role: { Args: Record<string, never>; Returns: string };
       is_admin: { Args: Record<string, never>; Returns: boolean };
       redeem_walker_invite: { Args: { invite_code: string }; Returns: string };
+      admin_set_subscription_price: {
+        Args: { p_subscription_id: string; p_price: number | null };
+        Returns: undefined;
+      };
     };
     Enums: Record<string, never>;
   };

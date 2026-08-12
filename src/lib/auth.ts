@@ -36,3 +36,12 @@ export async function getProfile(): Promise<Profile | null> {
 
   return (data as Profile | null) ?? null;
 }
+
+/**
+ * True si el usuario autenticado es admin. Para validar permisos en Server
+ * Actions y Server Components (además de la RLS).
+ */
+export async function isAdmin(): Promise<boolean> {
+  const profile = await getProfile();
+  return profile?.role === "admin";
+}
