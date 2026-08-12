@@ -51,7 +51,7 @@ export function WalkMediaUploader({
         .from(BUCKET)
         .upload(path, file, { contentType: file.type, upsert: false });
       if (upErr) {
-        setError(`No se pudo subir "${file.name}": ${upErr.message}`);
+        setError(`No se pudo subir "${file.name}". Probá de nuevo.`);
         continue;
       }
 
@@ -63,7 +63,7 @@ export function WalkMediaUploader({
         .single();
       if (insErr) {
         await supabase.storage.from(BUCKET).remove([path]);
-        setError(insErr.message);
+        setError("No se pudo guardar el archivo. Probá de nuevo.");
         continue;
       }
 
@@ -80,7 +80,7 @@ export function WalkMediaUploader({
       .delete()
       .eq("id", item.id);
     if (delErr) {
-      setError(delErr.message);
+      setError("No se pudo borrar el archivo. Probá de nuevo.");
       return;
     }
     await supabase.storage.from(BUCKET).remove([item.path]);

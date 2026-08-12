@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { getProfile } from "@/lib/auth";
 import type { BathAppointment } from "@/lib/types/database";
 import { icons } from "@/components/icons";
 import { BathForm } from "./bath-form";
@@ -19,15 +20,13 @@ const Droplet = icons.droplet;
 
 export default async function BanosPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const profile = await getProfile();
 
   const [dogsRes, bathsRes] = await Promise.all([
     supabase
       .from("dogs")
       .select("id, name")
-      .eq("owner_id", user?.id ?? "")
+      .eq("owner_id", profile?.id ?? "")
       .order("created_at", { ascending: true }),
     supabase
       .from("bath_appointments")

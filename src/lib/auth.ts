@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import type { Profile, Role } from "@/lib/types/database";
 
@@ -19,9 +20,10 @@ export function roleHome(role: Role | null | undefined): string {
 
 /**
  * Perfil del usuario autenticado (o null si no hay sesión).
- * Para usar en Server Components / layouts.
+ * Memoizado por request con `cache()` de React: aunque lo llamen el layout, la
+ * page y isAdmin, la sesión + el perfil se resuelven UNA sola vez por request.
  */
-export async function getProfile(): Promise<Profile | null> {
+export const getProfile = cache(async (): Promise<Profile | null> => {
   const supabase = await createClient();
   const {
     data: { user },
@@ -35,7 +37,7 @@ export async function getProfile(): Promise<Profile | null> {
     .single();
 
   return (data as Profile | null) ?? null;
-}
+});
 
 /**
  * True si el usuario autenticado es admin. Para validar permisos en Server

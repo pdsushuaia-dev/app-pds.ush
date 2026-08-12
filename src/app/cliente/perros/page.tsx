@@ -1,15 +1,17 @@
 import { createClient } from "@/lib/supabase/server";
+import { getProfile } from "@/lib/auth";
 import type { Dog } from "@/lib/types/database";
 import { DogCard } from "./dog-card";
 import { NewDogSection } from "./new-dog-section";
 
 export default async function PerrosPage() {
   const supabase = await createClient();
+  const profile = await getProfile();
 
-  // La RLS limita automáticamente a los perros del owner logueado.
   const { data, error } = await supabase
     .from("dogs")
     .select("*")
+    .eq("owner_id", profile?.id ?? "")
     .order("created_at", { ascending: true });
 
   const dogs = (data ?? []) as Dog[];
@@ -27,8 +29,8 @@ export default async function PerrosPage() {
       </div>
 
       {error ? (
-        <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
-          No se pudieron cargar los perros: {error.message}
+        <p className="rounded-md bg-red-950 px-3 py-2 text-sm text-red-300">
+          No se pudieron cargar tus perros. Probá recargar la página.
         </p>
       ) : dogs.length === 0 ? (
         <div className="rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted">

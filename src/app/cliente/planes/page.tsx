@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getProfile } from "@/lib/auth";
 import type { Dog, Plan, Subscription } from "@/lib/types/database";
 import { formatARS } from "@/lib/format";
 import { PlanPicker, type DogWithPlan, type PlanOption } from "./plan-picker";
 
 export default async function PlanesPage() {
   const supabase = await createClient();
+  const profile = await getProfile();
 
   const [plansRes, dogsRes, subsRes] = await Promise.all([
     supabase
@@ -13,7 +15,11 @@ export default async function PlanesPage() {
       .select("*")
       .eq("active", true)
       .order("days_per_week", { ascending: true, nullsFirst: false }),
-    supabase.from("dogs").select("*").order("created_at", { ascending: true }),
+    supabase
+      .from("dogs")
+      .select("*")
+      .eq("owner_id", profile?.id ?? "")
+      .order("created_at", { ascending: true }),
     // La RLS limita estas suscripciones a las de los perros del usuario.
     supabase.from("subscriptions").select("*").eq("status", "active"),
   ]);

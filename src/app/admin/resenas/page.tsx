@@ -44,7 +44,8 @@ export default async function AdminResenas({
       .select(
         "id, dog_id, walker_id, client_id, rating, comment, created_at, dogs(name)"
       )
-      .order("created_at", { ascending: false }),
+      .order("created_at", { ascending: false })
+      .limit(500),
     supabase
       .from("profiles")
       .select("id, full_name")

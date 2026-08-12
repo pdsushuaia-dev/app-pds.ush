@@ -55,7 +55,7 @@ export async function cancelBath(id: string): Promise<BathState> {
     .from("bath_appointments")
     .delete()
     .eq("id", id);
-  if (error) return { error: error.message };
+  if (error) return { error: "No pudimos cancelar el baño. Probá de nuevo." };
 
   revalidatePath("/cliente/banos");
   return {};
