@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import type { TimeSlot } from "@/lib/types/database";
 import { slotLabel } from "@/lib/turnos";
@@ -29,23 +30,22 @@ function StatCard({
   icon,
   accent,
   hint,
+  href,
 }: {
   label: string;
   value: number;
   icon: IconName;
   accent?: boolean;
   hint?: string;
+  href?: string;
 }) {
   const Icon = icons[icon];
   const isAlert = accent && value > 0;
-  return (
-    <div
-      className={`rounded-xl border p-4 ${
-        isAlert
-          ? "border-amber-500/40 bg-amber-500/10"
-          : "border-border bg-surface"
-      }`}
-    >
+  const base = `block rounded-xl border p-4 ${
+    isAlert ? "border-amber-500/40 bg-amber-500/10" : "border-border bg-surface"
+  }`;
+  const inner = (
+    <>
       <div className="flex items-center justify-between">
         <p className="text-xs uppercase tracking-wide text-muted">{label}</p>
         <span
@@ -60,8 +60,20 @@ function StatCard({
       </div>
       <p className="mt-2 text-3xl font-bold tabular-nums">{value}</p>
       {hint ? <p className="mt-0.5 text-xs text-muted">{hint}</p> : null}
-    </div>
+    </>
   );
+
+  if (href) {
+    return (
+      <Link
+        href={href}
+        className={`${base} group transition hover:border-brand/60 hover:bg-surface-2`}
+      >
+        {inner}
+      </Link>
+    );
+  }
+  return <div className={base}>{inner}</div>;
 }
 
 export default async function AdminHome() {
@@ -145,12 +157,18 @@ export default async function AdminHome() {
 
       {/* Métricas */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-        <StatCard label="Paseos de hoy" value={paseosHoy.count ?? 0} icon="route" />
+        <StatCard
+          label="Paseos de hoy"
+          value={paseosHoy.count ?? 0}
+          icon="route"
+          href="/admin/turnos"
+        />
         <StatCard
           label="Turnos agendados"
           value={agTotal.count ?? 0}
           icon="calendar"
           hint={`${agCon.count ?? 0} asignados`}
+          href="/admin/turnos"
         />
         <StatCard
           label="Sin asignar"
@@ -158,10 +176,26 @@ export default async function AdminHome() {
           icon="bell"
           accent
           hint="requieren paseador"
+          href="/admin/turnos"
         />
-        <StatCard label="Paseadores" value={walkersCount.count ?? 0} icon="users" />
-        <StatCard label="Clientes" value={clientsCount.count ?? 0} icon="user" />
-        <StatCard label="Perros" value={dogsCount.count ?? 0} icon="paw" />
+        <StatCard
+          label="Paseadores"
+          value={walkersCount.count ?? 0}
+          icon="users"
+          href="/admin/paseadores"
+        />
+        <StatCard
+          label="Clientes"
+          value={clientsCount.count ?? 0}
+          icon="user"
+          href="/admin/clientes"
+        />
+        <StatCard
+          label="Perros"
+          value={dogsCount.count ?? 0}
+          icon="paw"
+          href="/admin/clientes"
+        />
       </div>
 
       {/* Próximos turnos de hoy */}
