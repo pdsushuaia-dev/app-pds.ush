@@ -48,34 +48,34 @@ export function BannerItem({ banner }: { banner: Banner }) {
       : null;
 
   return (
-    <li className="rounded-lg border border-neutral-200 px-4 py-3 text-sm dark:border-neutral-800">
+    <li className="rounded-lg border border-border px-4 py-3 text-sm">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <span className="font-medium">{banner.title}</span>
         {banner.active ? (
-          <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700 dark:bg-green-950 dark:text-green-300">
+          <span className="badge-brand">
             Activo
           </span>
         ) : (
-          <span className="rounded-full bg-neutral-200 px-2 py-0.5 text-xs text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
+          <span className="rounded-full bg-surface-2 px-2 py-0.5 text-xs text-muted">
             Inactivo
           </span>
         )}
         {ventana ? (
-          <span className="text-xs text-neutral-400">{ventana}</span>
+          <span className="text-xs text-muted">{ventana}</span>
         ) : null}
         <div className="ml-auto flex gap-2">
           <button
             type="button"
             onClick={toggle}
             disabled={pending}
-            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm disabled:opacity-60 dark:border-neutral-700"
+            className="rounded-md border border-border px-3 py-1.5 text-sm disabled:opacity-60"
           >
             {banner.active ? "Desactivar" : "Activar"}
           </button>
           <button
             type="button"
             onClick={() => setEditing(true)}
-            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm dark:border-neutral-700"
+            className="rounded-md border border-border px-3 py-1.5 text-sm"
           >
             Editar
           </button>
@@ -90,7 +90,7 @@ export function BannerItem({ banner }: { banner: Banner }) {
         </div>
       </div>
       {banner.body ? (
-        <p className="mt-1 text-neutral-600 dark:text-neutral-300">{banner.body}</p>
+        <p className="mt-1 text-muted">{banner.body}</p>
       ) : null}
       {error ? (
         <p className="mt-1 text-xs text-red-600 dark:text-red-400">{error}</p>

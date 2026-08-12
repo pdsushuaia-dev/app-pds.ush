@@ -4,10 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { APP_NAME } from "@/lib/constants";
 import { LogoutButton } from "@/components/LogoutButton";
+import { icons, type IconName } from "@/components/icons";
 
 export interface NavItem {
   href: string;
   label: string;
+  icon?: IconName;
 }
 
 function isActive(pathname: string, href: string): boolean {
@@ -34,33 +36,41 @@ export function RoleNav({
 
   return (
     <aside className="flex w-full shrink-0 flex-col border-b border-border bg-surface md:h-dvh md:w-60 md:border-b-0 md:border-r">
-      <div className="flex items-center gap-2 p-4">
+      <div className="flex items-center gap-2.5 p-4">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/logo.png"
           alt=""
-          className="size-8 shrink-0 rounded-lg object-cover"
+          className="size-9 shrink-0 rounded-xl object-cover ring-1 ring-border"
         />
         <div className="min-w-0">
           <Link href="/" className="block truncate text-base font-bold text-fg">
             {APP_NAME}
           </Link>
-          <p className="text-xs uppercase tracking-wide text-brand">{title}</p>
+          <p className="text-[11px] font-medium uppercase tracking-wider text-brand">
+            {title}
+          </p>
         </div>
       </div>
 
       <nav className="flex gap-1 overflow-x-auto px-2 pb-2 md:flex-1 md:flex-col md:gap-0.5">
-        {items.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={
-              isActive(pathname, item.href) ? "nav-item nav-item-active" : "nav-item"
-            }
-          >
-            {item.label}
-          </Link>
-        ))}
+        {items.map((item) => {
+          const Icon = item.icon ? icons[item.icon] : null;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={
+                isActive(pathname, item.href)
+                  ? "nav-item nav-item-active"
+                  : "nav-item"
+              }
+            >
+              {Icon ? <Icon className="h-[18px] w-[18px] shrink-0" /> : null}
+              <span className="truncate">{item.label}</span>
+            </Link>
+          );
+        })}
       </nav>
 
       <div className="hidden border-t border-border p-2 md:block">

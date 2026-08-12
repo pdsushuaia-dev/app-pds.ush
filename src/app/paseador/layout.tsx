@@ -1,9 +1,9 @@
-import { RoleNav } from "@/components/RoleNav";
+import { RoleNav, type NavItem } from "@/components/RoleNav";
 import { PushRegistrar } from "@/components/PushRegistrar";
 import { getProfile } from "@/lib/auth";
 
-const items = [
-  { href: "/paseador", label: "Mi agenda" },
+const items: NavItem[] = [
+  { href: "/paseador", label: "Mi agenda", icon: "calendar" },
 ];
 
 export default async function PaseadorLayout({ children }: { children: React.ReactNode }) {

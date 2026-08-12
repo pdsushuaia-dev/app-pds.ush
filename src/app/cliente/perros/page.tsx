@@ -19,7 +19,7 @@ export default async function PerrosPage() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold">Mis perros</h1>
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-muted">
             Cargá la ficha de cada perro: foto, raza, dirección de retiro y notas.
           </p>
         </div>
@@ -31,7 +31,7 @@ export default async function PerrosPage() {
           No se pudieron cargar los perros: {error.message}
         </p>
       ) : dogs.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-neutral-300 p-8 text-center text-sm text-neutral-500 dark:border-neutral-700">
+        <div className="rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted">
           Todavía no cargaste ningún perro. Tocá <b>“Agregar perro”</b> para empezar.
         </div>
       ) : (

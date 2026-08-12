@@ -76,14 +76,14 @@ export function ScheduleEditor({
   return (
     <form
       action={formAction}
-      className="flex flex-col gap-3 rounded-xl border border-neutral-200 p-4 dark:border-neutral-800"
+      className="flex flex-col gap-3 rounded-xl border border-border p-4"
     >
       <input type="hidden" name="subscriptionId" value={subscriptionId} />
       <input type="hidden" name="entries" value={JSON.stringify(entries)} />
 
       <div className="flex items-baseline justify-between gap-2">
         <span className="font-medium">{dogName}</span>
-        <span className="text-xs text-neutral-500">
+        <span className="text-xs text-muted">
           {planName}
           {daysPerWeek != null ? (
             <>
@@ -92,7 +92,7 @@ export function ScheduleEditor({
                 className={
                   incompleto
                     ? "text-red-600 dark:text-red-400"
-                    : "text-green-600 dark:text-green-400"
+                    : "text-brand"
                 }
               >
                 {count} de {daysPerWeek} días
@@ -102,7 +102,7 @@ export function ScheduleEditor({
         </span>
       </div>
 
-      <div className="flex flex-col divide-y divide-neutral-100 dark:divide-neutral-900">
+      <div className="flex flex-col divide-y divide-border">
         {WEEKDAYS.map((wd) => {
           const st = days[wd.value];
           return (
@@ -121,7 +121,7 @@ export function ScheduleEditor({
                 <select
                   value={st.timeSlot}
                   onChange={(e) => setSlot(wd.value, e.target.value as TimeSlot)}
-                  className="rounded-lg border border-neutral-300 px-2 py-1 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+                  className="input"
                 >
                   {SLOTS.map((s) => (
                     <option key={s.key} value={s.key}>
@@ -130,7 +130,7 @@ export function ScheduleEditor({
                   ))}
                 </select>
               ) : (
-                <span className="text-xs text-neutral-400">sin paseo</span>
+                <span className="text-xs text-muted">sin paseo</span>
               )}
             </div>
           );
@@ -141,7 +141,7 @@ export function ScheduleEditor({
         <p className="text-xs text-red-600 dark:text-red-400">{state.error}</p>
       ) : null}
       {state.ok ? (
-        <p className="text-xs text-green-600 dark:text-green-400">
+        <p className="text-xs text-brand">
           Agenda guardada — generamos tus próximos turnos ✓
         </p>
       ) : null}

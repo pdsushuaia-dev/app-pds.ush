@@ -42,9 +42,7 @@ export function PlanItem({ plan }: { plan: Plan }) {
         </span>
         <span className="font-semibold text-brand">{formatARS(plan.price)}</span>
         {plan.active ? (
-          <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700 dark:bg-green-950 dark:text-green-300">
-            Activo
-          </span>
+          <span className="badge-brand">Activo</span>
         ) : (
           <span className="rounded-full bg-surface-2 px-2 py-0.5 text-xs text-muted">
             Inactivo

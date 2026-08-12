@@ -23,15 +23,11 @@ export function SessionBanners({ banners }: { banners: ClientBanner[] }) {
       {visible.map((b) => (
         <div
           key={b.id}
-          className="flex items-start justify-between gap-3 rounded-xl border border-green-300 bg-green-50 px-4 py-3 dark:border-green-800 dark:bg-green-950"
+          className="flex items-start justify-between gap-3 rounded-xl border border-brand/50 bg-brand/10 px-4 py-3"
         >
           <div className="text-sm">
-            <p className="font-medium text-green-900 dark:text-green-100">
-              {b.title}
-            </p>
-            {b.body ? (
-              <p className="mt-0.5 text-green-800 dark:text-green-200">{b.body}</p>
-            ) : null}
+            <p className="font-medium text-brand">{b.title}</p>
+            {b.body ? <p className="mt-0.5 text-fg">{b.body}</p> : null}
           </div>
           <button
             type="button"
@@ -43,7 +39,7 @@ export function SessionBanners({ banners }: { banners: ClientBanner[] }) {
                 return next;
               })
             }
-            className="shrink-0 rounded-md px-2 text-green-700 hover:bg-green-100 dark:text-green-300 dark:hover:bg-green-900"
+            className="shrink-0 rounded-md px-2 text-muted transition-colors hover:bg-surface-2 hover:text-fg"
           >
             ✕
           </button>

@@ -34,7 +34,7 @@ export function AssignRow({
       <select
         name="walkerId"
         defaultValue={currentWalkerId ?? ""}
-        className="rounded-lg border border-neutral-300 px-2 py-1 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+        className="input"
       >
         <option value="">Sin asignar</option>
         {walkers.map((w) => (
@@ -58,7 +58,7 @@ export function AssignRow({
         </span>
       ) : null}
       {state.ok ? (
-        <span className="text-xs text-green-600 dark:text-green-400">✓</span>
+        <span className="text-xs text-brand">✓</span>
       ) : null}
     </form>
   );

@@ -1,15 +1,15 @@
-import { RoleNav } from "@/components/RoleNav";
+import { RoleNav, type NavItem } from "@/components/RoleNav";
 import { PushRegistrar } from "@/components/PushRegistrar";
 import { getProfile } from "@/lib/auth";
 
-const items = [
-  { href: "/admin", label: "Dashboard" },
-  { href: "/admin/turnos", label: "Turnos" },
-  { href: "/admin/paseadores", label: "Paseadores" },
-  { href: "/admin/planes", label: "Planes" },
-  { href: "/admin/clientes", label: "Clientes" },
-  { href: "/admin/resenas", label: "Reseñas" },
-  { href: "/admin/banners", label: "Banners" },
+const items: NavItem[] = [
+  { href: "/admin", label: "Dashboard", icon: "grid" },
+  { href: "/admin/turnos", label: "Turnos", icon: "calendar" },
+  { href: "/admin/paseadores", label: "Paseadores", icon: "users" },
+  { href: "/admin/planes", label: "Planes", icon: "tag" },
+  { href: "/admin/clientes", label: "Clientes", icon: "user" },
+  { href: "/admin/resenas", label: "Reseñas", icon: "star" },
+  { href: "/admin/banners", label: "Banners", icon: "bell" },
 ];
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {

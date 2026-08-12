@@ -104,7 +104,9 @@ body {
 
   /* Ítems de navegación */
   .nav-item {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
     white-space: nowrap;
     border-radius: 8px;
     padding: 0.5rem 0.75rem;

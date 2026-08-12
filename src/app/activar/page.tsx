@@ -23,12 +23,12 @@ export default async function ActivarPage() {
         {APP_NAME}
       </Link>
       <h1 className="text-2xl font-semibold">Activar cuenta de paseador</h1>
-      <p className="mt-1 text-sm text-neutral-500">
+      <p className="mt-1 text-sm text-muted">
         Ingresá el código de invitación que te dio el administrador.
       </p>
 
       {profile?.role === "walker" ? (
-        <div className="mt-6 rounded-xl border border-green-300 bg-green-50 p-4 text-sm dark:border-green-800 dark:bg-green-950">
+        <div className="mt-6 rounded-xl border border-brand/50 bg-brand/10 p-4 text-sm">
           Ya sos paseador.{" "}
           <Link href="/paseador" className="font-medium underline">
             Ir a mi agenda
@@ -36,7 +36,7 @@ export default async function ActivarPage() {
           .
         </div>
       ) : profile?.role === "admin" ? (
-        <div className="mt-6 rounded-xl border border-neutral-300 bg-neutral-50 p-4 text-sm dark:border-neutral-700 dark:bg-neutral-900">
+        <div className="mt-6 rounded-xl border border-border bg-surface p-4 text-sm">
           Estás como administrador. Los códigos se generan desde{" "}
           <Link href="/admin/paseadores" className="font-medium underline">
             Paseadores

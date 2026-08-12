@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import type { TimeSlot } from "@/lib/types/database";
 import { slotLabel } from "@/lib/turnos";
+import { icons, type IconName } from "@/components/icons";
 
 const timeFmt = new Intl.DateTimeFormat("es-AR", {
   timeZone: "America/Argentina/Ushuaia",
@@ -25,25 +26,40 @@ interface UpcomingRow {
 function StatCard({
   label,
   value,
+  icon,
   accent,
   hint,
 }: {
   label: string;
   value: number;
+  icon: IconName;
   accent?: boolean;
   hint?: string;
 }) {
+  const Icon = icons[icon];
+  const isAlert = accent && value > 0;
   return (
     <div
       className={`rounded-xl border p-4 ${
-        accent && value > 0
-          ? "border-amber-300 bg-amber-50 dark:border-amber-800 dark:bg-amber-950"
-          : "border-neutral-200 dark:border-neutral-800"
+        isAlert
+          ? "border-amber-500/40 bg-amber-500/10"
+          : "border-border bg-surface"
       }`}
     >
-      <p className="text-xs uppercase tracking-wide text-neutral-500">{label}</p>
-      <p className="mt-1 text-3xl font-bold tabular-nums">{value}</p>
-      {hint ? <p className="mt-0.5 text-xs text-neutral-400">{hint}</p> : null}
+      <div className="flex items-center justify-between">
+        <p className="text-xs uppercase tracking-wide text-muted">{label}</p>
+        <span
+          className={`flex h-8 w-8 items-center justify-center rounded-lg ${
+            isAlert
+              ? "bg-amber-500/15 text-amber-400"
+              : "bg-surface-2 text-muted"
+          }`}
+        >
+          <Icon className="h-4 w-4" />
+        </span>
+      </div>
+      <p className="mt-2 text-3xl font-bold tabular-nums">{value}</p>
+      {hint ? <p className="mt-0.5 text-xs text-muted">{hint}</p> : null}
     </div>
   );
 }
@@ -124,33 +140,35 @@ export default async function AdminHome() {
     <div className="flex flex-col gap-8">
       <div>
         <h1 className="text-2xl font-semibold">Dashboard</h1>
-        <p className="text-sm text-neutral-500">Resumen de la operación.</p>
+        <p className="text-sm text-muted">Resumen de la operación.</p>
       </div>
 
       {/* Métricas */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-        <StatCard label="Paseos de hoy" value={paseosHoy.count ?? 0} />
+        <StatCard label="Paseos de hoy" value={paseosHoy.count ?? 0} icon="route" />
         <StatCard
           label="Turnos agendados"
           value={agTotal.count ?? 0}
+          icon="calendar"
           hint={`${agCon.count ?? 0} asignados`}
         />
         <StatCard
           label="Sin asignar"
           value={agSin.count ?? 0}
+          icon="bell"
           accent
           hint="requieren paseador"
         />
-        <StatCard label="Paseadores" value={walkersCount.count ?? 0} />
-        <StatCard label="Clientes" value={clientsCount.count ?? 0} />
-        <StatCard label="Perros" value={dogsCount.count ?? 0} />
+        <StatCard label="Paseadores" value={walkersCount.count ?? 0} icon="users" />
+        <StatCard label="Clientes" value={clientsCount.count ?? 0} icon="user" />
+        <StatCard label="Perros" value={dogsCount.count ?? 0} icon="paw" />
       </div>
 
       {/* Próximos turnos de hoy */}
       <section>
         <h2 className="text-lg font-semibold">Próximos turnos de hoy</h2>
         {upcoming.length === 0 ? (
-          <p className="mt-2 rounded-xl border border-dashed border-neutral-300 p-6 text-sm text-neutral-500 dark:border-neutral-700">
+          <p className="mt-2 rounded-xl border border-dashed border-border p-6 text-sm text-muted">
             No quedan turnos para hoy.
           </p>
         ) : (
@@ -158,19 +176,19 @@ export default async function AdminHome() {
             {upcoming.map((a) => (
               <li
                 key={a.id}
-                className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-neutral-200 px-3 py-2 text-sm dark:border-neutral-800"
+                className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-border px-3 py-2 text-sm"
               >
                 <span className="font-medium">{a.dogs?.name ?? "Perro"}</span>
-                <span className="text-neutral-500">
+                <span className="text-muted">
                   {timeFmt.format(new Date(a.scheduled_at))} ·{" "}
                   {slotLabel(a.time_slot)}
                 </span>
                 {a.walker_id ? (
-                  <span className="ml-auto text-xs text-neutral-500">
+                  <span className="ml-auto text-xs text-muted">
                     {walkerName.get(a.walker_id) ?? "Paseador"}
                   </span>
                 ) : (
-                  <span className="ml-auto rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-700 dark:bg-amber-950 dark:text-amber-300">
+                  <span className="ml-auto rounded-full bg-amber-500/15 px-2 py-0.5 text-xs text-amber-400">
                     Sin asignar
                   </span>
                 )}

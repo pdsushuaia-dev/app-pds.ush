@@ -45,18 +45,18 @@ export function CreateInviteButton() {
       ) : null}
 
       {code ? (
-        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-green-300 bg-green-50 px-4 py-3 dark:border-green-800 dark:bg-green-950">
+        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-brand/50 bg-brand/10 px-4 py-3">
           <span className="font-mono text-2xl font-bold tracking-widest">
             {code}
           </span>
           <button
             type="button"
             onClick={copy}
-            className="rounded-lg border border-green-400 px-3 py-1.5 text-sm text-green-800 dark:border-green-700 dark:text-green-200"
+            className="rounded-lg border border-brand/50 px-3 py-1.5 text-sm text-brand"
           >
             {copied ? "¡Copiado!" : "Copiar"}
           </button>
-          <span className="text-xs text-green-700 dark:text-green-300">
+          <span className="text-xs text-brand">
             Compartilo con el paseador para que lo active en <b>/activar</b>.
           </span>
         </div>

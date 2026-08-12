@@ -6,8 +6,7 @@ import type { Dog } from "@/lib/types/database";
 
 const initial: DogFormState = {};
 
-const inputCls =
-  "rounded-lg border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900";
+const inputCls = "input";
 
 export function DogForm({
   dog,
@@ -29,7 +28,7 @@ export function DogForm({
   return (
     <form
       action={formAction}
-      className="flex flex-col gap-3 rounded-xl border border-neutral-200 p-4 dark:border-neutral-800"
+      className="flex flex-col gap-3 rounded-xl border border-border p-4"
     >
       {dog ? <input type="hidden" name="id" value={dog.id} /> : null}
 
@@ -38,15 +37,15 @@ export function DogForm({
         <img
           src={preview ?? "/dog-placeholder.svg"}
           alt=""
-          className="size-16 shrink-0 rounded-lg object-cover ring-1 ring-neutral-200 dark:ring-neutral-800"
+          className="size-16 shrink-0 rounded-lg object-cover ring-1 ring-border"
         />
-        <label className="text-sm text-neutral-600 dark:text-neutral-400">
+        <label className="text-sm text-muted">
           <span className="mb-1 block">Foto</span>
           <input
             type="file"
             name="photo"
             accept="image/*"
-            className="block w-full text-xs file:mr-3 file:rounded-md file:border-0 file:bg-neutral-100 file:px-3 file:py-1.5 file:text-sm dark:file:bg-neutral-800"
+            className="block w-full text-xs file:mr-3 file:rounded-md file:border-0 file:bg-surface-2 file:px-3 file:py-1.5 file:text-sm"
             onChange={(e) => {
               const file = e.target.files?.[0];
               setPreview(file ? URL.createObjectURL(file) : dog?.photo_url ?? null);
@@ -100,7 +99,7 @@ export function DogForm({
           type="button"
           onClick={onCancel}
           disabled={pending}
-          className="rounded-lg border border-neutral-300 px-4 py-2 text-sm disabled:opacity-60 dark:border-neutral-700"
+          className="rounded-lg border border-border px-4 py-2 text-sm disabled:opacity-60"
         >
           Cancelar
         </button>

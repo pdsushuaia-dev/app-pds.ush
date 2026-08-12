@@ -46,7 +46,7 @@ export default async function PlanesPage() {
     <div className="flex flex-col gap-8">
       <div>
         <h1 className="text-2xl font-semibold">Elegir plan</h1>
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-muted">
           Elegí la cantidad de paseos por semana para cada perro.
         </p>
       </div>
@@ -59,9 +59,7 @@ export default async function PlanesPage() {
             <div
               key={plan.id}
               className={`relative flex flex-col rounded-2xl border p-5 ${
-                destacado
-                  ? "border-brand ring-1 ring-brand"
-                  : "border-neutral-200 dark:border-neutral-800"
+                destacado ? "border-brand ring-1 ring-brand" : "border-border"
               }`}
             >
               {destacado ? (
@@ -70,14 +68,14 @@ export default async function PlanesPage() {
                 </span>
               ) : null}
               <h3 className="text-lg font-semibold">{plan.name}</h3>
-              <p className="mt-0.5 text-sm text-neutral-500">
+              <p className="mt-0.5 text-sm text-muted">
                 {plan.days_per_week
                   ? `${plan.days_per_week} paseos por semana`
                   : "Días a convenir"}
               </p>
               <p className="mt-3 text-2xl font-bold">{formatARS(plan.price)}</p>
               {plan.price != null ? (
-                <p className="text-xs text-neutral-400">por mes</p>
+                <p className="text-xs text-muted">por mes</p>
               ) : null}
             </div>
           );
@@ -88,9 +86,9 @@ export default async function PlanesPage() {
       <div>
         <h2 className="text-lg font-semibold">Suscribir mis perros</h2>
         {dogsWithPlan.length === 0 ? (
-          <p className="mt-2 rounded-xl border border-dashed border-neutral-300 p-6 text-sm text-neutral-500 dark:border-neutral-700">
+          <p className="mt-2 rounded-xl border border-dashed border-border p-6 text-sm text-muted">
             Primero cargá un perro en{" "}
-            <Link href="/cliente/perros" className="underline">
+            <Link href="/cliente/perros" className="text-brand hover:underline">
               Mis perros
             </Link>
             .

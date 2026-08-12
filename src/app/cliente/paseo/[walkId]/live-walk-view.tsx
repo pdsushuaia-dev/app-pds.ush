@@ -118,36 +118,36 @@ export function LiveWalkView({
       <div className="flex items-center gap-2">
         <h1 className="text-2xl font-semibold">{dogName} en vivo</h1>
         {enCurso ? (
-          <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700 dark:bg-green-950 dark:text-green-300">
+          <span className="badge-brand">
             🟢 En curso
           </span>
         ) : cancelado ? (
-          <span className="rounded-full bg-neutral-200 px-2 py-0.5 text-xs text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
+          <span className="rounded-full bg-surface-2 px-2 py-0.5 text-xs text-muted">
             Cancelado
           </span>
         ) : (
-          <span className="rounded-full bg-neutral-200 px-2 py-0.5 text-xs text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
+          <span className="rounded-full bg-surface-2 px-2 py-0.5 text-xs text-muted">
             Finalizado
           </span>
         )}
       </div>
 
       {cancelado ? (
-        <p className="rounded-xl border border-dashed border-neutral-300 p-6 text-sm text-neutral-500 dark:border-neutral-700">
+        <p className="rounded-xl border border-dashed border-border p-6 text-sm text-muted">
           Este paseo fue cancelado.
         </p>
       ) : (
         <>
           {/* Métricas */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-xl border border-neutral-200 p-4 dark:border-neutral-800">
-              <p className="text-xs uppercase tracking-wide text-neutral-500">
+            <div className="rounded-xl border border-border p-4">
+              <p className="text-xs uppercase tracking-wide text-muted">
                 Distancia
               </p>
               <p className="mt-1 text-3xl font-bold tabular-nums">{km} km</p>
             </div>
-            <div className="rounded-xl border border-neutral-200 p-4 dark:border-neutral-800">
-              <p className="text-xs uppercase tracking-wide text-neutral-500">
+            <div className="rounded-xl border border-border p-4">
+              <p className="text-xs uppercase tracking-wide text-muted">
                 {enCurso ? "Tiempo" : "Duración"}
               </p>
               <p className="mt-1 text-3xl font-bold tabular-nums">
@@ -157,7 +157,7 @@ export function LiveWalkView({
           </div>
 
           {/* Mapa */}
-          <div className="h-72 overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-800">
+          <div className="h-72 overflow-hidden rounded-xl border border-border">
             {last ? (
               <LiveMap
                 center={last}
@@ -166,14 +166,14 @@ export function LiveWalkView({
                 markerIconUrl={dogPhoto}
               />
             ) : (
-              <div className="flex h-full items-center justify-center bg-neutral-100 text-sm text-neutral-500 dark:bg-neutral-900">
+              <div className="flex h-full items-center justify-center bg-surface text-sm text-muted">
                 Esperando la ubicación del paseador…
               </div>
             )}
           </div>
 
           {!enCurso ? (
-            <p className="text-sm text-neutral-500">
+            <p className="text-sm text-muted">
               Paseo finalizado. Recorrido total: <b>{km} km</b> en{" "}
               <b>{formatDuration(shownDur)}</b>.
             </p>

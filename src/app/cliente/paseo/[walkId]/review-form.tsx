@@ -13,7 +13,7 @@ export function ReviewForm({ walkId }: { walkId: string }) {
 
   if (state.ok) {
     return (
-      <div className="rounded-xl border border-green-300 bg-green-50 p-4 text-sm text-green-800 dark:border-green-800 dark:bg-green-950 dark:text-green-200">
+      <div className="rounded-xl border border-brand/50 bg-brand/10 p-4 text-sm text-brand">
         ¡Gracias por tu reseña! 🐾
       </div>
     );
@@ -22,11 +22,11 @@ export function ReviewForm({ walkId }: { walkId: string }) {
   return (
     <form
       action={formAction}
-      className="flex flex-col gap-3 rounded-xl border border-neutral-200 p-4 dark:border-neutral-800"
+      className="flex flex-col gap-3 rounded-xl border border-border p-4"
     >
       <div>
         <h2 className="font-semibold">¿Cómo estuvo el paseo?</h2>
-        <p className="text-xs text-neutral-500">
+        <p className="text-xs text-muted">
           Tu reseña es privada (solo la ve el equipo de PDS).
         </p>
       </div>
@@ -49,7 +49,7 @@ export function ReviewForm({ walkId }: { walkId: string }) {
               className={
                 (hover || rating) >= n
                   ? "text-amber-400"
-                  : "text-neutral-300 dark:text-neutral-700"
+                  : "text-muted/40"
               }
             >
               ★
@@ -62,7 +62,7 @@ export function ReviewForm({ walkId }: { walkId: string }) {
         name="comment"
         placeholder="Comentario (opcional)"
         rows={3}
-        className="rounded-lg border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+        className="input"
       />
 
       {state.error ? (

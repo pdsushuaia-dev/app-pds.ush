@@ -29,8 +29,8 @@ export function DogCard({ dog }: { dog: Dog }) {
   }
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-800">
-      <div className="aspect-video w-full bg-neutral-100 dark:bg-neutral-900">
+    <div className="flex flex-col overflow-hidden rounded-xl border border-border">
+      <div className="aspect-video w-full bg-surface">
         {dog.photo_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -46,13 +46,13 @@ export function DogCard({ dog }: { dog: Dog }) {
       <div className="flex flex-1 flex-col p-4">
         <h3 className="font-semibold">{dog.name}</h3>
         {dog.breed ? (
-          <p className="text-sm text-neutral-500">{dog.breed}</p>
+          <p className="text-sm text-muted">{dog.breed}</p>
         ) : null}
         {dog.pickup_address ? (
-          <p className="mt-1 text-xs text-neutral-400">📍 {dog.pickup_address}</p>
+          <p className="mt-1 text-xs text-muted">📍 {dog.pickup_address}</p>
         ) : null}
         {dog.notes ? (
-          <p className="mt-2 line-clamp-2 text-xs text-neutral-500">{dog.notes}</p>
+          <p className="mt-2 line-clamp-2 text-xs text-muted">{dog.notes}</p>
         ) : null}
 
         {error ? (
@@ -63,7 +63,7 @@ export function DogCard({ dog }: { dog: Dog }) {
           <button
             type="button"
             onClick={() => setEditing(true)}
-            className="rounded-md border border-neutral-300 px-3 py-1.5 text-sm hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-900"
+            className="rounded-md border border-border px-3 py-1.5 text-sm hover:bg-surface-2"
           >
             Editar
           </button>

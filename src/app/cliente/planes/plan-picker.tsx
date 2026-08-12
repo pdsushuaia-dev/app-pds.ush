@@ -34,15 +34,15 @@ function DogPlanRow({ dog, plans }: { dog: DogWithPlan; plans: PlanOption[] }) {
   return (
     <form
       action={formAction}
-      className="flex flex-col gap-2 rounded-xl border border-neutral-200 p-4 dark:border-neutral-800"
+      className="flex flex-col gap-2 rounded-xl border border-border p-4"
     >
       <input type="hidden" name="dogId" value={dog.id} />
 
       <div className="flex items-baseline justify-between gap-2">
         <span className="font-medium">{dog.name}</span>
-        <span className="text-xs text-neutral-500">
+        <span className="text-xs text-muted">
           Plan actual:{" "}
-          <b className="text-neutral-700 dark:text-neutral-300">
+          <b className="text-fg">
             {dog.currentPlanName ?? "sin plan"}
           </b>
         </span>
@@ -53,7 +53,7 @@ function DogPlanRow({ dog, plans }: { dog: DogWithPlan; plans: PlanOption[] }) {
           name="planId"
           defaultValue={dog.currentPlanId ?? ""}
           required
-          className="min-w-0 flex-1 rounded-lg border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+          className="input min-w-0 flex-1"
         >
           <option value="" disabled>
             Elegí un plan
@@ -78,7 +78,7 @@ function DogPlanRow({ dog, plans }: { dog: DogWithPlan; plans: PlanOption[] }) {
         <p className="text-xs text-red-600 dark:text-red-400">{state.error}</p>
       ) : null}
       {state.ok ? (
-        <p className="text-xs text-green-600 dark:text-green-400">Plan actualizado ✓</p>
+        <p className="text-xs text-brand">Plan actualizado ✓</p>
       ) : null}
     </form>
   );

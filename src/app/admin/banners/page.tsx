@@ -18,7 +18,7 @@ export default async function AdminBanners() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold">Banners</h1>
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-muted">
             Avisos que ven los clientes en su panel.
           </p>
         </div>
@@ -26,7 +26,7 @@ export default async function AdminBanners() {
       </div>
 
       {banners.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-neutral-300 p-8 text-center text-sm text-neutral-500 dark:border-neutral-700">
+        <div className="rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted">
           Todavía no publicaste ningún banner.
         </div>
       ) : (

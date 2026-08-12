@@ -16,7 +16,7 @@ export function RedeemForm() {
         autoComplete="off"
         autoCapitalize="characters"
         required
-        className="rounded-lg border border-neutral-300 px-3 py-2 text-center font-mono text-lg tracking-widest uppercase dark:border-neutral-700 dark:bg-neutral-900"
+        className="input text-center font-mono text-lg tracking-widest uppercase"
       />
 
       {state.error ? (

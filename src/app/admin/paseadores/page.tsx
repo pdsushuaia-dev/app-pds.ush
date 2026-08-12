@@ -45,7 +45,7 @@ export default async function AdminPaseadores() {
     <div className="flex flex-col gap-8">
       <div>
         <h1 className="text-2xl font-semibold">Paseadores</h1>
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-muted">
           Generá un código de invitación y compartilo. La persona lo canjea en{" "}
           <b>/activar</b> y queda habilitada como paseador.
         </p>
@@ -63,12 +63,12 @@ export default async function AdminPaseadores() {
       <section>
         <h2 className="text-lg font-semibold">
           Códigos{" "}
-          <span className="text-sm font-normal text-neutral-500">
+          <span className="text-sm font-normal text-muted">
             ({invites.length})
           </span>
         </h2>
         {invites.length === 0 ? (
-          <p className="mt-2 rounded-xl border border-dashed border-neutral-300 p-6 text-sm text-neutral-500 dark:border-neutral-700">
+          <p className="mt-2 rounded-xl border border-dashed border-border p-6 text-sm text-muted">
             Todavía no generaste ningún código.
           </p>
         ) : (
@@ -76,23 +76,23 @@ export default async function AdminPaseadores() {
             {invites.map((inv) => (
               <li
                 key={inv.id}
-                className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-neutral-200 px-3 py-2 text-sm dark:border-neutral-800"
+                className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-border px-3 py-2 text-sm"
               >
                 <span className="font-mono text-base font-bold tracking-widest">
                   {inv.code}
                 </span>
-                <span className="text-xs text-neutral-400">
+                <span className="text-xs text-muted">
                   creado {dateFmt.format(new Date(inv.created_at))}
                 </span>
                 {inv.used_by ? (
-                  <span className="ml-auto rounded-full bg-neutral-200 px-2 py-0.5 text-xs text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300">
+                  <span className="ml-auto rounded-full bg-surface-2 px-2 py-0.5 text-xs text-muted">
                     Usado{" "}
                     {walkerName.get(inv.used_by)
                       ? `por ${walkerName.get(inv.used_by)}`
                       : ""}
                   </span>
                 ) : (
-                  <span className="ml-auto rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700 dark:bg-green-950 dark:text-green-300">
+                  <span className="ml-auto badge-brand">
                     Disponible
                   </span>
                 )}
@@ -106,12 +106,12 @@ export default async function AdminPaseadores() {
       <section>
         <h2 className="text-lg font-semibold">
           Paseadores activos{" "}
-          <span className="text-sm font-normal text-neutral-500">
+          <span className="text-sm font-normal text-muted">
             ({walkers.length})
           </span>
         </h2>
         {walkers.length === 0 ? (
-          <p className="mt-2 rounded-xl border border-dashed border-neutral-300 p-6 text-sm text-neutral-500 dark:border-neutral-700">
+          <p className="mt-2 rounded-xl border border-dashed border-border p-6 text-sm text-muted">
             Todavía no hay paseadores.
           </p>
         ) : (
@@ -119,13 +119,13 @@ export default async function AdminPaseadores() {
             {walkers.map((w) => (
               <li
                 key={w.id}
-                className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-neutral-200 px-3 py-2 text-sm dark:border-neutral-800"
+                className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-border px-3 py-2 text-sm"
               >
                 <span className="font-medium">
                   {w.full_name ?? "(sin nombre)"}
                 </span>
                 {w.phone ? (
-                  <span className="text-neutral-500">{w.phone}</span>
+                  <span className="text-muted">{w.phone}</span>
                 ) : null}
               </li>
             ))}

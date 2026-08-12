@@ -16,7 +16,7 @@ interface ApptRow {
   walker_id: string;
   scheduled_at: string;
   time_slot: "morning" | "midday" | "afternoon" | null;
-  dogs: { name: string } | null;
+  dogs: { name: string; owner_id: string } | null;
 }
 
 /**
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
   const admin = createAdminClient();
   const { data, error } = await admin
     .from("appointments")
-    .select("id, walker_id, scheduled_at, time_slot, dogs(name)")
+    .select("id, walker_id, scheduled_at, time_slot, dogs(name, owner_id)")
     .not("walker_id", "is", null)
     .eq("status", "scheduled")
     .is("reminded_at", null)
@@ -60,6 +60,14 @@ export async function POST(request: NextRequest) {
       body: `${perro} a las ${hora} (${slotLabel(a.time_slot)})`,
       url: "/paseador",
     });
+    // Recordatorio también para el dueño del perro.
+    if (a.dogs?.owner_id) {
+      await sendPushToUser(a.dogs.owner_id, {
+        title: "Recordatorio de paseo",
+        body: `Hoy ${perro} tiene paseo a las ${hora}`,
+        url: "/cliente",
+      });
+    }
     await admin
       .from("appointments")
       .update({ reminded_at: new Date().toISOString() })

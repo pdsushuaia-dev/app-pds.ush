@@ -16,7 +16,7 @@ export function LoginForm({ redirect = "" }: { redirect?: string }) {
         {APP_NAME}
       </Link>
       <h1 className="text-2xl font-semibold">Ingresar</h1>
-      <p className="mt-1 text-sm text-neutral-500">
+      <p className="mt-1 text-sm text-muted">
         Accedé con tu email y contraseña.
       </p>
 
@@ -28,7 +28,7 @@ export function LoginForm({ redirect = "" }: { redirect?: string }) {
           placeholder="Email"
           autoComplete="email"
           required
-          className="rounded-lg border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+          className="input"
         />
         <input
           name="password"
@@ -36,7 +36,7 @@ export function LoginForm({ redirect = "" }: { redirect?: string }) {
           placeholder="Contraseña"
           autoComplete="current-password"
           required
-          className="rounded-lg border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+          className="input"
         />
 
         {state.error ? (
@@ -54,7 +54,7 @@ export function LoginForm({ redirect = "" }: { redirect?: string }) {
         </button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-neutral-500">
+      <p className="mt-6 text-center text-sm text-muted">
         ¿No tenés cuenta?{" "}
         <Link href="/registro" className="underline">
           Registrate

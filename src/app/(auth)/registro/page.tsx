@@ -16,7 +16,7 @@ export default function RegistroPage() {
         {APP_NAME}
       </Link>
       <h1 className="text-2xl font-semibold">Crear cuenta</h1>
-      <p className="mt-1 text-sm text-neutral-500">
+      <p className="mt-1 text-sm text-muted">
         Registrate como cliente para agendar los paseos de tu perro.
       </p>
 
@@ -26,19 +26,19 @@ export default function RegistroPage() {
           placeholder="Nombre completo"
           autoComplete="name"
           required
-          className="rounded-lg border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+          className="input"
         />
         <input
           name="phone"
           placeholder="Teléfono"
           autoComplete="tel"
-          className="rounded-lg border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+          className="input"
         />
         <select
           name="city"
           defaultValue=""
           required
-          className="rounded-lg border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+          className="input"
         >
           <option value="" disabled>
             Elegí tu ciudad
@@ -55,7 +55,7 @@ export default function RegistroPage() {
           placeholder="Email"
           autoComplete="email"
           required
-          className="rounded-lg border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+          className="input"
         />
         <input
           name="password"
@@ -63,7 +63,7 @@ export default function RegistroPage() {
           placeholder="Contraseña (mín. 6 caracteres)"
           autoComplete="new-password"
           required
-          className="rounded-lg border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+          className="input"
         />
 
         {state.error ? (
@@ -72,7 +72,7 @@ export default function RegistroPage() {
           </p>
         ) : null}
         {state.message ? (
-          <p className="rounded-md bg-green-50 px-3 py-2 text-sm text-green-700 dark:bg-green-950 dark:text-green-300">
+          <p className="rounded-md bg-brand/10 px-3 py-2 text-sm text-brand">
             {state.message}
           </p>
         ) : null}
@@ -86,7 +86,7 @@ export default function RegistroPage() {
         </button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-neutral-500">
+      <p className="mt-6 text-center text-sm text-muted">
         ¿Ya tenés cuenta?{" "}
         <Link href="/login" className="underline">
           Ingresá

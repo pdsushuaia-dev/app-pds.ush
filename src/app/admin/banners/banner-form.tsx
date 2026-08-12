@@ -10,8 +10,7 @@ import type { Banner } from "@/lib/types/database";
 
 const initial: BannerState = {};
 
-const inputCls =
-  "rounded-lg border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900";
+const inputCls = "input";
 
 /** timestamptz ISO → valor de <input datetime-local> en hora de Ushuaia. */
 function toArInput(iso: string | null | undefined): string {
@@ -48,7 +47,7 @@ export function BannerForm({
   return (
     <form
       action={formAction}
-      className="flex flex-col gap-3 rounded-xl border border-neutral-200 p-4 dark:border-neutral-800"
+      className="flex flex-col gap-3 rounded-xl border border-border p-4"
     >
       {banner ? <input type="hidden" name="id" value={banner.id} /> : null}
 
@@ -68,7 +67,7 @@ export function BannerForm({
       />
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <label className="text-xs text-neutral-500">
+        <label className="text-xs text-muted">
           Desde (opcional)
           <input
             type="datetime-local"
@@ -77,7 +76,7 @@ export function BannerForm({
             className={`${inputCls} mt-1 block w-full`}
           />
         </label>
-        <label className="text-xs text-neutral-500">
+        <label className="text-xs text-muted">
           Hasta (opcional)
           <input
             type="datetime-local"
@@ -114,7 +113,7 @@ export function BannerForm({
           type="button"
           onClick={onCancel}
           disabled={pending}
-          className="rounded-lg border border-neutral-300 px-4 py-2 text-sm disabled:opacity-60 dark:border-neutral-700"
+          className="rounded-lg border border-border px-4 py-2 text-sm disabled:opacity-60"
         >
           Cancelar
         </button>

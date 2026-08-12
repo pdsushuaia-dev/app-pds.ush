@@ -22,7 +22,7 @@ function Stars({ rating }: { rating: number }) {
   return (
     <span className="text-amber-400" aria-label={`${rating} de 5`}>
       {"★".repeat(rating)}
-      <span className="text-neutral-300 dark:text-neutral-700">
+      <span className="text-muted/40">
         {"★".repeat(5 - rating)}
       </span>
     </span>
@@ -93,7 +93,7 @@ export default async function AdminResenas({
     <div className="flex flex-col gap-8">
       <div>
         <h1 className="text-2xl font-semibold">Reseñas</h1>
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-muted">
           Reseñas privadas de los clientes (control de calidad interno).
         </p>
       </div>
@@ -102,7 +102,7 @@ export default async function AdminResenas({
       <section>
         <h2 className="text-lg font-semibold">Promedio por paseador</h2>
         {walkers.length === 0 ? (
-          <p className="mt-2 text-sm text-neutral-500">No hay paseadores.</p>
+          <p className="mt-2 text-sm text-muted">No hay paseadores.</p>
         ) : (
           <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {walkers.map((w) => {
@@ -111,7 +111,7 @@ export default async function AdminResenas({
               return (
                 <div
                   key={w.id}
-                  className="rounded-xl border border-neutral-200 p-4 dark:border-neutral-800"
+                  className="rounded-xl border border-border p-4"
                 >
                   <p className="font-medium">{w.full_name ?? "(sin nombre)"}</p>
                   {avg != null ? (
@@ -119,12 +119,12 @@ export default async function AdminResenas({
                       <span className="text-xl font-bold tabular-nums">
                         {avg.toFixed(1)}
                       </span>{" "}
-                      <span className="text-neutral-500">
+                      <span className="text-muted">
                         · {e!.count} reseña{e!.count > 1 ? "s" : ""}
                       </span>
                     </p>
                   ) : (
-                    <p className="mt-1 text-sm text-neutral-400">Sin reseñas</p>
+                    <p className="mt-1 text-sm text-muted">Sin reseñas</p>
                   )}
                 </div>
               );
@@ -138,7 +138,7 @@ export default async function AdminResenas({
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-lg font-semibold">
             Todas las reseñas{" "}
-            <span className="text-sm font-normal text-neutral-500">
+            <span className="text-sm font-normal text-muted">
               ({shown.length})
             </span>
           </h2>
@@ -146,7 +146,7 @@ export default async function AdminResenas({
             <select
               name="walker"
               defaultValue={walkerFilter}
-              className="rounded-lg border border-neutral-300 px-2 py-1 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+              className="input"
             >
               <option value="">Todos los paseadores</option>
               {walkers.map((w) => (
@@ -157,7 +157,7 @@ export default async function AdminResenas({
             </select>
             <button
               type="submit"
-              className="rounded-lg border border-neutral-300 px-3 py-1 text-sm dark:border-neutral-700"
+              className="rounded-lg border border-border px-3 py-1 text-sm"
             >
               Filtrar
             </button>
@@ -165,7 +165,7 @@ export default async function AdminResenas({
         </div>
 
         {shown.length === 0 ? (
-          <p className="mt-3 rounded-xl border border-dashed border-neutral-300 p-6 text-sm text-neutral-500 dark:border-neutral-700">
+          <p className="mt-3 rounded-xl border border-dashed border-border p-6 text-sm text-muted">
             No hay reseñas{walkerFilter ? " para este paseador" : ""}.
           </p>
         ) : (
@@ -173,23 +173,23 @@ export default async function AdminResenas({
             {shown.map((r) => (
               <li
                 key={r.id}
-                className="rounded-lg border border-neutral-200 px-4 py-3 text-sm dark:border-neutral-800"
+                className="rounded-lg border border-border px-4 py-3 text-sm"
               >
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                   <Stars rating={r.rating} />
                   <span className="font-medium">{r.dogs?.name ?? "Perro"}</span>
-                  <span className="text-neutral-500">
+                  <span className="text-muted">
                     Paseador: {r.walker_id ? nameById.get(r.walker_id) ?? "—" : "—"}
                   </span>
-                  <span className="text-neutral-500">
+                  <span className="text-muted">
                     Cliente: {nameById.get(r.client_id) ?? "—"}
                   </span>
-                  <span className="ml-auto text-xs text-neutral-400">
+                  <span className="ml-auto text-xs text-muted">
                     {dateFmt.format(new Date(r.created_at))}
                   </span>
                 </div>
                 {r.comment ? (
-                  <p className="mt-1 text-neutral-600 dark:text-neutral-300">
+                  <p className="mt-1 text-muted">
                     “{r.comment}”
                   </p>
                 ) : null}

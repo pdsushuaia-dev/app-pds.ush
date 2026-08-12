@@ -82,7 +82,7 @@ export default async function TurnosPage() {
     <div className="flex flex-col gap-8">
       <div>
         <h1 className="text-2xl font-semibold">Agenda de turnos</h1>
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-muted">
           Elegí los días y la franja de cada perro. Generamos tus turnos de las
           próximas 4 semanas; el paseador se asigna después.
         </p>
@@ -93,12 +93,12 @@ export default async function TurnosPage() {
         <Link
           key={w.id}
           href={`/cliente/paseo/${w.id}`}
-          className="flex items-center justify-between gap-3 rounded-xl border border-green-300 bg-green-50 px-4 py-3 text-sm dark:border-green-800 dark:bg-green-950"
+          className="flex items-center justify-between gap-3 rounded-xl border border-brand/50 bg-brand/10 px-4 py-3 text-sm"
         >
-          <span className="font-medium text-green-800 dark:text-green-200">
+          <span className="font-medium text-brand">
             🟢 {w.dogs?.name ?? "Tu perro"} está de paseo ahora
           </span>
-          <span className="rounded-lg bg-green-600 px-3 py-1.5 text-xs font-medium text-white">
+          <span className="btn-primary">
             Ver en vivo
           </span>
         </Link>
@@ -108,7 +108,7 @@ export default async function TurnosPage() {
       <section>
         <h2 className="text-lg font-semibold">Mi agenda semanal</h2>
         {subs.length === 0 ? (
-          <p className="mt-2 rounded-xl border border-dashed border-neutral-300 p-6 text-sm text-neutral-500 dark:border-neutral-700">
+          <p className="mt-2 rounded-xl border border-dashed border-border p-6 text-sm text-muted">
             No tenés suscripciones activas. Elegí un plan en{" "}
             <Link href="/cliente/planes" className="underline">
               Planes
@@ -135,7 +135,7 @@ export default async function TurnosPage() {
       <section>
         <h2 className="text-lg font-semibold">Próximos turnos</h2>
         {groups.length === 0 ? (
-          <p className="mt-2 rounded-xl border border-dashed border-neutral-300 p-6 text-sm text-neutral-500 dark:border-neutral-700">
+          <p className="mt-2 rounded-xl border border-dashed border-border p-6 text-sm text-muted">
             Todavía no hay turnos generados. Guardá tu agenda semanal para
             crearlos.
           </p>
@@ -143,17 +143,17 @@ export default async function TurnosPage() {
           <div className="mt-3 flex flex-col gap-5">
             {groups.map((g) => (
               <div key={g.key}>
-                <h3 className="text-sm font-medium capitalize text-neutral-600 dark:text-neutral-400">
+                <h3 className="text-sm font-medium capitalize text-muted">
                   {g.label}
                 </h3>
                 <ul className="mt-2 flex flex-col gap-2">
                   {g.items.map((a) => (
                     <li
                       key={a.id}
-                      className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-neutral-200 px-3 py-2 text-sm dark:border-neutral-800"
+                      className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-border px-3 py-2 text-sm"
                     >
                       <span className="font-medium">{a.dogs?.name ?? "Perro"}</span>
-                      <span className="text-neutral-500">
+                      <span className="text-muted">
                         {slotLabel(a.time_slot)} · {timeFmt.format(new Date(a.scheduled_at))}
                       </span>
                       {a.walker_id == null ? (

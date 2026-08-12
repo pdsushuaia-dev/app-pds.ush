@@ -84,7 +84,7 @@ export default async function PaseadorHome() {
     <div className="flex flex-col gap-6">
       <div>
         <h1 className="text-2xl font-semibold">Mi agenda</h1>
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-muted">
           Tus paseos asignados. Iniciá el paseo cuando retires al perro.
         </p>
       </div>
@@ -92,14 +92,14 @@ export default async function PaseadorHome() {
       <EnableNotifications />
 
       {groups.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-neutral-300 p-8 text-center text-sm text-neutral-500 dark:border-neutral-700">
+        <div className="rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted">
           No tenés turnos asignados por ahora.
         </div>
       ) : (
         <div className="flex flex-col gap-5">
           {groups.map((g) => (
             <div key={g.label}>
-              <h2 className="text-sm font-medium capitalize text-neutral-600 dark:text-neutral-400">
+              <h2 className="text-sm font-medium capitalize text-muted">
                 {g.label}
               </h2>
               <ul className="mt-2 flex flex-col gap-2">
@@ -108,10 +108,10 @@ export default async function PaseadorHome() {
                   return (
                     <li
                       key={a.id}
-                      className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-neutral-200 px-3 py-2.5 text-sm dark:border-neutral-800"
+                      className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-border px-3 py-2.5 text-sm"
                     >
                       <span className="font-medium">{a.dogs?.name ?? "Perro"}</span>
-                      <span className="text-neutral-500">
+                      <span className="text-muted">
                         {slotLabel(a.time_slot)} ·{" "}
                         {timeFmt.format(new Date(a.scheduled_at))}
                       </span>
@@ -119,7 +119,7 @@ export default async function PaseadorHome() {
                         {walkId ? (
                           <Link
                             href={`/paseador/paseo/${walkId}`}
-                            className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white"
+                            className="btn-primary"
                           >
                             Continuar paseo
                           </Link>
@@ -138,7 +138,7 @@ export default async function PaseadorHome() {
 
       {doneWalks.length > 0 ? (
         <div>
-          <h2 className="text-sm font-medium text-neutral-600 dark:text-neutral-400">
+          <h2 className="text-sm font-medium text-muted">
             Finalizados hoy
           </h2>
           <ul className="mt-2 flex flex-col gap-2">

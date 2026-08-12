@@ -1,14 +1,15 @@
-import { RoleNav } from "@/components/RoleNav";
+import { RoleNav, type NavItem } from "@/components/RoleNav";
 import { PushRegistrar } from "@/components/PushRegistrar";
 import { getProfile } from "@/lib/auth";
 
-const items = [
-  { href: "/cliente", label: "Inicio" },
-  { href: "/cliente/perros", label: "Mis perros" },
-  { href: "/cliente/planes", label: "Planes" },
-  { href: "/cliente/turnos", label: "Turnos" },
-  { href: "/cliente/historial", label: "Historial" },
-  { href: "/cliente/pagos", label: "Pagos" },
+const items: NavItem[] = [
+  { href: "/cliente", label: "Inicio", icon: "home" },
+  { href: "/cliente/perros", label: "Mis perros", icon: "paw" },
+  { href: "/cliente/planes", label: "Planes", icon: "tag" },
+  { href: "/cliente/turnos", label: "Turnos", icon: "calendar" },
+  { href: "/cliente/banos", label: "Baños", icon: "droplet" },
+  { href: "/cliente/historial", label: "Historial", icon: "route" },
+  { href: "/cliente/pagos", label: "Pagos", icon: "card" },
 ];
 
 export default async function ClienteLayout({ children }: { children: React.ReactNode }) {

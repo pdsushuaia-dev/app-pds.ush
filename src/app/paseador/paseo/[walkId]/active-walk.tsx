@@ -169,7 +169,7 @@ export function ActiveWalk({
     <div className="flex flex-col gap-4">
       <div>
         <h1 className="text-2xl font-semibold">Paseo con {dogName}</h1>
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-muted">
           Mantené la app abierta durante el paseo para registrar el recorrido.
         </p>
       </div>
@@ -182,12 +182,12 @@ export function ActiveWalk({
 
       {/* Métricas en vivo */}
       <div className="grid grid-cols-2 gap-3">
-        <div className="rounded-xl border border-neutral-200 p-4 dark:border-neutral-800">
-          <p className="text-xs uppercase tracking-wide text-neutral-500">Distancia</p>
+        <div className="rounded-xl border border-border p-4">
+          <p className="text-xs uppercase tracking-wide text-muted">Distancia</p>
           <p className="mt-1 text-3xl font-bold tabular-nums">{km} km</p>
         </div>
-        <div className="rounded-xl border border-neutral-200 p-4 dark:border-neutral-800">
-          <p className="text-xs uppercase tracking-wide text-neutral-500">Tiempo</p>
+        <div className="rounded-xl border border-border p-4">
+          <p className="text-xs uppercase tracking-wide text-muted">Tiempo</p>
           <p className="mt-1 text-3xl font-bold tabular-nums">
             {formatDuration(elapsed)}
           </p>
@@ -195,7 +195,7 @@ export function ActiveWalk({
       </div>
 
       {/* Mapa */}
-      <div className="h-72 overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-800">
+      <div className="h-72 overflow-hidden rounded-xl border border-border">
         {current ? (
           <LiveMap
             center={current}
@@ -204,7 +204,7 @@ export function ActiveWalk({
             markerIconUrl={dogPhoto}
           />
         ) : (
-          <div className="flex h-full items-center justify-center bg-neutral-100 text-sm text-neutral-500 dark:bg-neutral-900">
+          <div className="flex h-full items-center justify-center bg-surface text-sm text-muted">
             Obteniendo tu ubicación…
           </div>
         )}
