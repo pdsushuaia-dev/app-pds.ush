@@ -66,9 +66,15 @@ export async function signUpAction(
   const phone = String(formData.get("phone") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
+  const cityRaw = String(formData.get("city") ?? "").trim();
+  const city =
+    cityRaw === "ushuaia" || cityRaw === "rio_grande" ? cityRaw : null;
 
   if (!full_name || !email || !password) {
     return { error: "Completá nombre, email y contraseña." };
+  }
+  if (!city) {
+    return { error: "Elegí tu ciudad." };
   }
   if (password.length < 6) {
     return { error: "La contraseña debe tener al menos 6 caracteres." };
@@ -78,7 +84,7 @@ export async function signUpAction(
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
-    options: { data: { full_name, phone } },
+    options: { data: { full_name, phone, city } },
   });
 
   if (error) {
@@ -87,6 +93,12 @@ export async function signUpAction(
 
   // Si la confirmación de email está desactivada, ya hay sesión → al panel.
   if (data.session) {
+    // El trigger handle_new_user setea city desde el metadata (migración 0014);
+    // por las dudas (o si aún no se corrió), lo aseguramos acá (0007 permite al
+    // usuario setear su propia city).
+    if (data.user) {
+      await supabase.from("profiles").update({ city }).eq("id", data.user.id);
+    }
     redirect("/cliente");
   }
 

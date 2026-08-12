@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { effectivePriceARS } from "@/lib/pricing";
 import { formatARS } from "@/lib/format";
+import { CITIES } from "@/lib/constants";
 import { PriceEditor } from "./price-editor";
 import { PaymentControl } from "./payment-control";
 
@@ -46,10 +47,11 @@ function currentPeriod(): { key: string; label: string } {
 export default async function AdminClientes({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; city?: string }>;
 }) {
   const sp = await searchParams;
   const q = (sp.q ?? "").trim().toLowerCase();
+  const cityFilter = sp.city ?? "";
   const period = currentPeriod();
   const supabase = await createClient();
 
@@ -97,16 +99,18 @@ export default async function AdminClientes({
     else pendientes++; // pending o sin registro
   }
 
-  // Filtro por nombre de cliente o de perro.
-  const filtered = q
-    ? clients.filter((c) => {
-        const nameHit = (c.full_name ?? "").toLowerCase().includes(q);
-        const dogHit = (dogsByOwner.get(c.id) ?? []).some((d) =>
-          d.name.toLowerCase().includes(q)
-        );
-        return nameHit || dogHit;
-      })
-    : clients;
+  // Filtro por ciudad y por nombre de cliente o de perro.
+  const filtered = clients.filter((c) => {
+    if (cityFilter && c.city !== cityFilter) return false;
+    if (q) {
+      const nameHit = (c.full_name ?? "").toLowerCase().includes(q);
+      const dogHit = (dogsByOwner.get(c.id) ?? []).some((d) =>
+        d.name.toLowerCase().includes(q)
+      );
+      if (!nameHit && !dogHit) return false;
+    }
+    return true;
+  });
 
   return (
     <div className="flex flex-col gap-6">
@@ -126,14 +130,30 @@ export default async function AdminClientes({
             </span>
           </div>
         </div>
-        <form method="get">
+        <form method="get" className="flex flex-wrap items-center gap-2">
           <input
             name="q"
             defaultValue={sp.q ?? ""}
             placeholder="Buscar por cliente o perro…"
-            className="input w-64"
+            className="input w-56"
             aria-label="Buscar"
           />
+          <select
+            name="city"
+            defaultValue={cityFilter}
+            className="input"
+            aria-label="Ciudad"
+          >
+            <option value="">Todas las ciudades</option>
+            {CITIES.map((c) => (
+              <option key={c.value} value={c.value}>
+                {c.label}
+              </option>
+            ))}
+          </select>
+          <button type="submit" className="btn-secondary px-3 py-1.5">
+            Filtrar
+          </button>
         </form>
       </div>
 

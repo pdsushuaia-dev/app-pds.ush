@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useActionState } from "react";
 import { signUpAction, type AuthState } from "@/lib/actions/auth";
-import { APP_NAME } from "@/lib/constants";
+import { APP_NAME, CITIES } from "@/lib/constants";
 
 const initial: AuthState = {};
 
@@ -34,6 +34,21 @@ export default function RegistroPage() {
           autoComplete="tel"
           className="rounded-lg border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
         />
+        <select
+          name="city"
+          defaultValue=""
+          required
+          className="rounded-lg border border-neutral-300 px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
+        >
+          <option value="" disabled>
+            Elegí tu ciudad
+          </option>
+          {CITIES.map((c) => (
+            <option key={c.value} value={c.value}>
+              {c.label}
+            </option>
+          ))}
+        </select>
         <input
           name="email"
           type="email"
