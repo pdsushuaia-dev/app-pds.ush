@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { effectivePriceARS } from "@/lib/pricing";
 import { formatARS } from "@/lib/format";
 import { PriceEditor } from "./price-editor";
+import { PaymentControl } from "./payment-control";
 
 interface ClientRow {
   id: string;
@@ -40,32 +41,6 @@ function currentPeriod(): { key: string; label: string } {
     year: "numeric",
   }).format(now);
   return { key: `${y}-${m}`, label };
-}
-
-function PayBadge({ status }: { status: string | null }) {
-  if (status === "paid")
-    return (
-      <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700 dark:bg-green-950 dark:text-green-300">
-        Pagado
-      </span>
-    );
-  if (status === "overdue")
-    return (
-      <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs text-red-700 dark:bg-red-950 dark:text-red-300">
-        Vencido
-      </span>
-    );
-  if (status === "pending")
-    return (
-      <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-700 dark:bg-amber-950 dark:text-amber-300">
-        Pendiente
-      </span>
-    );
-  return (
-    <span className="rounded-full bg-surface-2 px-2 py-0.5 text-xs text-muted">
-      Sin registro
-    </span>
-  );
 }
 
 export default async function AdminClientes({
@@ -111,6 +86,17 @@ export default async function AdminClientes({
     pays.filter((p) => p.subscription_id).map((p) => [p.subscription_id!, p.status])
   );
 
+  // Resumen del mes sobre las suscripciones activas.
+  let alDia = 0;
+  let vencidos = 0;
+  let pendientes = 0;
+  for (const s of subs) {
+    const st = payBySub.get(s.id) ?? null;
+    if (st === "paid") alDia++;
+    else if (st === "overdue") vencidos++;
+    else pendientes++; // pending o sin registro
+  }
+
   // Filtro por nombre de cliente o de perro.
   const filtered = q
     ? clients.filter((c) => {
@@ -127,9 +113,18 @@ export default async function AdminClientes({
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold">Clientes</h1>
-          <p className="text-sm text-muted">
-            Precios y cobros — {period.label}.
-          </p>
+          <p className="text-sm text-muted">Precios y cobros — {period.label}.</p>
+          <div className="mt-2 flex flex-wrap gap-2 text-xs">
+            <span className="rounded-full bg-green-100 px-2 py-0.5 text-green-700 dark:bg-green-950 dark:text-green-300">
+              Al día: {alDia}
+            </span>
+            <span className="rounded-full bg-red-100 px-2 py-0.5 text-red-700 dark:bg-red-950 dark:text-red-300">
+              Vencidos: {vencidos}
+            </span>
+            <span className="rounded-full bg-surface-2 px-2 py-0.5 text-muted">
+              Pendientes: {pendientes}
+            </span>
+          </div>
         </div>
         <form method="get">
           <input
@@ -201,7 +196,12 @@ export default async function AdminClientes({
                               {formatARS(eff)}
                             </span>
                             <span className="ml-auto">
-                              <PayBadge status={payBySub.get(sub.id) ?? null} />
+                              <PaymentControl
+                                subscriptionId={sub.id}
+                                period={period.key}
+                                amount={eff}
+                                current={payBySub.get(sub.id) ?? null}
+                              />
                             </span>
                           </div>
                           <PriceEditor
