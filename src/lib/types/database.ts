@@ -75,6 +75,14 @@ export type Appointment = {
   created_at: string;
 }
 
+export type WalkMedia = {
+  id: string;
+  walk_id: string;
+  storage_path: string;
+  media_type: "photo" | "video";
+  created_at: string;
+}
+
 export type PushSubscriptionRow = {
   id: string;
   user_id: string;
@@ -179,6 +187,7 @@ export type Database = {
       payments: { Row: Payment; Insert: Partial<Payment>; Update: Partial<Payment>; Relationships: [] };
       walker_invites: { Row: WalkerInvite; Insert: Partial<WalkerInvite> & { code: string }; Update: Partial<WalkerInvite>; Relationships: [] };
       push_subscriptions: { Row: PushSubscriptionRow; Insert: Partial<PushSubscriptionRow> & { user_id: string; endpoint: string; p256dh: string; auth: string }; Update: Partial<PushSubscriptionRow>; Relationships: [] };
+      walk_media: { Row: WalkMedia; Insert: Partial<WalkMedia> & { walk_id: string; storage_path: string; media_type: "photo" | "video" }; Update: Partial<WalkMedia>; Relationships: [] };
     };
     Views: Record<string, never>;
     Functions: {

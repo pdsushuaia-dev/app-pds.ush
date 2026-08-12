@@ -33,7 +33,7 @@ export default async function PaseadorHome() {
   from.setHours(0, 0, 0, 0);
   const fromISO = from.toISOString();
 
-  const [apptsRes, walksRes] = await Promise.all([
+  const [apptsRes, walksRes, doneRes] = await Promise.all([
     // RLS appts_walker_select limita a los turnos asignados al paseador.
     supabase
       .from("appointments")
@@ -46,10 +46,22 @@ export default async function PaseadorHome() {
       .from("walks")
       .select("id, appointment_id")
       .eq("status", "in_progress"),
+    // Paseos finalizados hoy (para subir/ver fotos después).
+    supabase
+      .from("walks")
+      .select("id, started_at, dogs(name)")
+      .eq("status", "done")
+      .gte("started_at", fromISO)
+      .order("started_at", { ascending: false }),
   ]);
 
   const appts = (apptsRes.data ?? []) as unknown as ApptRow[];
   const walks = (walksRes.data ?? []) as { id: string; appointment_id: string | null }[];
+  const doneWalks = (doneRes.data ?? []) as unknown as {
+    id: string;
+    started_at: string | null;
+    dogs: { name: string } | null;
+  }[];
 
   const walkByAppt = new Map<string, string>();
   for (const w of walks) {
@@ -123,6 +135,35 @@ export default async function PaseadorHome() {
           ))}
         </div>
       )}
+
+      {doneWalks.length > 0 ? (
+        <div>
+          <h2 className="text-sm font-medium text-neutral-600 dark:text-neutral-400">
+            Finalizados hoy
+          </h2>
+          <ul className="mt-2 flex flex-col gap-2">
+            {doneWalks.map((w) => (
+              <li
+                key={w.id}
+                className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-border px-3 py-2.5 text-sm"
+              >
+                <span className="font-medium">{w.dogs?.name ?? "Perro"}</span>
+                {w.started_at ? (
+                  <span className="text-muted">
+                    {timeFmt.format(new Date(w.started_at))}
+                  </span>
+                ) : null}
+                <Link
+                  href={`/paseador/paseo/${w.id}`}
+                  className="btn-secondary ml-auto px-3 py-1.5"
+                >
+                  Fotos
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
     </div>
   );
 }

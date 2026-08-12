@@ -159,7 +159,8 @@ export function ActiveWalk({
       setEnding(false);
       return;
     }
-    router.push("/paseador");
+    // Quedate en la pantalla del paseo (ahora finalizado) para subir las fotos.
+    router.refresh();
   }, [router, startMs, walkId]);
 
   const km = (distanceM / 1000).toFixed(1);

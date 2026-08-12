@@ -4,6 +4,7 @@ import type { LatLng } from "@/lib/geo/haversine";
 import type { WalkStatus } from "@/lib/types/database";
 import { LiveWalkView } from "./live-walk-view";
 import { ReviewForm } from "./review-form";
+import { MediaGallery, type GalleryItem } from "./media-gallery";
 
 export default async function ClientePaseoPage({
   params,
@@ -36,7 +37,7 @@ export default async function ClientePaseoPage({
 
   if (!walk) redirect("/cliente/turnos");
 
-  const [dogRes, posRes, reviewRes] = await Promise.all([
+  const [dogRes, posRes, reviewRes, mediaRes] = await Promise.all([
     supabase
       .from("dogs")
       .select("name, photo_url")
@@ -48,6 +49,11 @@ export default async function ClientePaseoPage({
       .eq("walk_id", walkId)
       .order("recorded_at", { ascending: true }),
     supabase.from("reviews").select("id").eq("walk_id", walkId).maybeSingle(),
+    supabase
+      .from("walk_media")
+      .select("id, storage_path, media_type")
+      .eq("walk_id", walkId)
+      .order("created_at", { ascending: true }),
   ]);
 
   const dog = dogRes.data as { name: string; photo_url: string | null } | null;
@@ -55,6 +61,17 @@ export default async function ClientePaseoPage({
     (p): LatLng => ({ lat: p.lat, lng: p.lng })
   );
   const alreadyReviewed = Boolean(reviewRes.data);
+  const media: GalleryItem[] = (
+    (mediaRes.data ?? []) as {
+      id: string;
+      storage_path: string;
+      media_type: "photo" | "video";
+    }[]
+  ).map((m) => ({
+    id: m.id,
+    url: supabase.storage.from("walk-media").getPublicUrl(m.storage_path).data.publicUrl,
+    type: m.media_type,
+  }));
 
   return (
     <div className="flex flex-col gap-6">
@@ -68,6 +85,8 @@ export default async function ClientePaseoPage({
         distanceM={walk.distance_m}
         durationS={walk.duration_s}
       />
+
+      <MediaGallery items={media} />
 
       {walk.status === "done" && !alreadyReviewed ? (
         <ReviewForm walkId={walk.id} />
