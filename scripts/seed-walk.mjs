@@ -1,13 +1,14 @@
 // =====================================================================
-// PDS.ushuaia · Agrega un PASEO EN VIVO (con recorrido) a una cuenta
+// PDS.ushuaia · Agrega un PASEO EN VIVO (con recorrido realista) a una cuenta
 // =====================================================================
-// Para ver cómo se ve el mapa: crea un paseo EN CURSO con su recorrido
-// para el perro de la cuenta EMAIL de abajo. Base de DESARROLLO.
+// Crea (o actualiza) un paseo EN CURSO para el perro de la cuenta EMAIL,
+// con un recorrido que SIGUE LAS CALLES del centro de Ushuaia: tramos rectos,
+// giros en esquina y un circuito que vuelve cerca del inicio. Base de DEV.
 //
 //   node scripts/seed-walk.mjs
 //
-// Idempotente: si ya hay un paseo en curso para ese perro, reusa ese.
-// Al terminar imprime el link directo al mapa.
+// Idempotente: si ya hay un paseo en curso para ese perro, lo REFRESCA
+// (nuevo recorrido + tiempo realista). Al terminar imprime el link al mapa.
 // =====================================================================
 
 import { readFileSync } from "node:fs";
@@ -15,6 +16,7 @@ import { createClient } from "@supabase/supabase-js";
 
 // Cuenta (cliente) a la que se le agrega el paseo:
 const EMAIL = "juanpcolinagonzalez@gmail.com";
+const DURATION_MIN = 30; // hace cuánto arrancó el paseo (tiempo en vivo)
 
 // ---------- env ----------
 try {
@@ -52,11 +54,49 @@ async function findUserByEmail(email) {
   return null;
 }
 
-console.log(`\n🐾 Agregando paseo en vivo a ${EMAIL}\n`);
+// ---------- Recorrido realista siguiendo la cuadrícula de Ushuaia ----------
+// La grilla del centro está rotada respecto al norte: las calles corren
+// paralelas/perpendiculares a la costa. Definimos dos vectores de "cuadra"
+// (~120 m) alineados a esa grilla y trazamos el paseo por esquinas.
+function buildRoute() {
+  const baseLat = -54.8098;
+  const baseLng = -68.3115;
+  const u = { lat: -0.0004556, lng: 0.0016966 }; // paralelo a la costa (ESE)
+  const v = { lat: 0.0009770, lng: 0.0007911 }; // perpendicular (NNE)
+
+  // Esquinas del circuito, en cuadras [a lo largo de u, a lo largo de v].
+  // Sale por una calle, gira, sube, vuelve por una paralela y cierra.
+  const corners = [
+    [0, 0], [3, 0], [3, 1.2], [1, 1.2], [1, 2.2],
+    [-0.8, 2.2], [-0.8, 0.4], [0, 0.4], [0, 0],
+  ];
+  const toLL = ([a, b]) => ({
+    lat: baseLat + a * u.lat + b * v.lat,
+    lng: baseLng + a * u.lng + b * v.lng,
+  });
+  const jitter = () => (Math.random() - 0.5) * 0.00008; // ~5 m de ruido GPS
+
+  const out = [];
+  for (let s = 0; s < corners.length - 1; s++) {
+    const [fa, fb] = corners[s];
+    const [ta, tb] = corners[s + 1];
+    const blocks = Math.hypot(ta - fa, tb - fb);
+    const steps = Math.max(2, Math.round(blocks / 0.28)); // ~1 punto cada 34 m
+    for (let k = 0; k < steps; k++) {
+      const t = k / steps;
+      const p = toLL([fa + (ta - fa) * t, fb + (tb - fb) * t]);
+      out.push({ lat: p.lat + jitter(), lng: p.lng + jitter() });
+    }
+  }
+  out.push(toLL(corners[corners.length - 1])); // punto exacto de cierre
+  return out;
+}
+
+console.log(`\n🐾 Paseo en vivo (recorrido realista) para ${EMAIL}\n`);
 
 const client = await findUserByEmail(EMAIL);
 if (!client) {
-  console.error(`✗ No encontré la cuenta ${EMAIL}. Revisá que esté registrada e intentá de nuevo.`);
+  console.error(`✗ No encontré la cuenta ${EMAIL}. Revisá que esté registrada.`);
   process.exit(1);
 }
 
@@ -112,7 +152,8 @@ if (!walkerId) {
   console.log("  • paseador asignado");
 }
 
-// 3) ¿Ya hay un paseo en curso para este perro?
+// 3) Paseo en curso: refrescar si existe, si no crear
+const startedAt = new Date(Date.now() - DURATION_MIN * 60 * 1000).toISOString();
 const { data: openWalks } = await db
   .from("walks")
   .select("id")
@@ -121,43 +162,34 @@ const { data: openWalks } = await db
   .limit(1);
 let walkId = openWalks?.[0]?.id;
 
-if (!walkId) {
-  const startedAt = new Date(Date.now() - 18 * 60 * 1000).toISOString(); // arrancó hace 18 min
+if (walkId) {
+  await db.from("walks").update({ started_at: startedAt, status: "in_progress" }).eq("id", walkId);
+  await db.from("walk_positions").delete().eq("walk_id", walkId); // regenerar recorrido
+  console.log("  • refresco el paseo en curso existente");
+} else {
   const { data: walk, error } = await db
     .from("walks")
-    .insert({
-      walker_id: walkerId,
-      dog_id: dog.id,
-      started_at: startedAt,
-      distance_m: 1520,
-      duration_s: 1080,
-      status: "in_progress",
-    })
+    .insert({ walker_id: walkerId, dog_id: dog.id, started_at: startedAt, status: "in_progress" })
     .select("id")
     .single();
   if (error) throw error;
   walkId = walk.id;
-
-  // Recorrido alrededor del centro de Ushuaia
-  const baseLat = -54.8085;
-  const baseLng = -68.312;
-  const startMs = new Date(startedAt).getTime();
-  const pts = [];
-  for (let i = 0; i < 24; i++) {
-    const t = i / 23;
-    pts.push({
-      walk_id: walkId,
-      lat: baseLat + t * 0.006 + Math.sin(i * 0.6) * 0.0008,
-      lng: baseLng + t * 0.009 + Math.cos(i * 0.5) * 0.0009,
-      recorded_at: new Date(startMs + i * 45000).toISOString(),
-    });
-  }
-  const { error: pErr } = await db.from("walk_positions").insert(pts);
-  if (pErr) throw pErr;
-  console.log(`  ✓ paseo EN CURSO con ${pts.length} puntos de recorrido`);
-} else {
-  console.log("  • ya había un paseo en curso → lo reuso");
+  console.log("  ✓ paseo EN CURSO creado");
 }
+
+// 4) Recorrido realista + timestamps repartidos en la duración
+const route = buildRoute();
+const startMs = new Date(startedAt).getTime();
+const totalMs = DURATION_MIN * 60 * 1000;
+const positions = route.map((p, i) => ({
+  walk_id: walkId,
+  lat: p.lat,
+  lng: p.lng,
+  recorded_at: new Date(startMs + Math.round((i / (route.length - 1)) * totalMs)).toISOString(),
+}));
+const { error: pErr } = await db.from("walk_positions").insert(positions);
+if (pErr) throw pErr;
+console.log(`  ✓ recorrido de ${positions.length} puntos por las calles (~1,4 km, giros y circuito)`);
 
 console.log("\n─────────────────────────────────────");
 console.log(`✓ Listo. Entrá como ${EMAIL} y abrí:`);

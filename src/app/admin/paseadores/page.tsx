@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { CreateInviteButton } from "./create-invite-button";
+import { CreateWalkerForm } from "./create-walker-form";
 
 const dateFmt = new Intl.DateTimeFormat("es-AR", {
   timeZone: "America/Argentina/Ushuaia",
@@ -46,14 +47,34 @@ export default async function AdminPaseadores() {
       <div>
         <h1 className="text-2xl font-semibold">Paseadores</h1>
         <p className="text-sm text-muted">
-          Generá un código de invitación y compartilo. La persona lo canjea en{" "}
-          <b>/activar</b> y queda habilitada como paseador.
+          Creá la cuenta del paseador y pasale el email y la contraseña. Entra
+          directo, sin pasos extra.
         </p>
       </div>
 
-      {/* Generar código */}
+      {/* Crear paseador (recomendado) */}
       <section>
-        <h2 className="text-lg font-semibold">Nuevo código de invitación</h2>
+        <h2 className="text-lg font-semibold">Crear paseador</h2>
+        <p className="mt-1 text-sm text-muted">
+          Queda habilitado al instante. Compartile las credenciales por WhatsApp.
+        </p>
+        <div className="mt-3">
+          <CreateWalkerForm />
+        </div>
+      </section>
+
+      {/* Opción B: código de invitación */}
+      <section>
+        <h2 className="text-lg font-semibold">
+          Código de invitación{" "}
+          <span className="text-sm font-normal text-muted">
+            · opción alternativa
+          </span>
+        </h2>
+        <p className="mt-1 text-sm text-muted">
+          Si preferís que se registre solo: generá un código, la persona lo canjea
+          en <b>/activar</b> y queda como paseador.
+        </p>
         <div className="mt-3">
           <CreateInviteButton />
         </div>

@@ -120,6 +120,11 @@ export const icons = {
       <path d="M12 5v14M5 12h14" />
     </Svg>
   ),
+  chat: (p: IconProps) => (
+    <Svg className={p.className}>
+      <path d="M4 5.5h16a1 1 0 0 1 1 1V15a1 1 0 0 1-1 1H9l-4 3.5V16H4a1 1 0 0 1-1-1V6.5a1 1 0 0 1 1-1Z" />
+    </Svg>
+  ),
 } as const;
 
 export type IconName = keyof typeof icons;
