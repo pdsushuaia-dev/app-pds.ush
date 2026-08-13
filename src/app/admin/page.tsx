@@ -161,7 +161,7 @@ export default async function AdminHome() {
           label="Paseos de hoy"
           value={paseosHoy.count ?? 0}
           icon="route"
-          href="/admin/turnos"
+          href="/admin/paseos"
         />
         <StatCard
           label="Turnos agendados"

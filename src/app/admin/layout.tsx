@@ -5,6 +5,7 @@ import { getProfile } from "@/lib/auth";
 const items: NavItem[] = [
   { href: "/admin", label: "Dashboard", icon: "grid" },
   { href: "/admin/turnos", label: "Turnos", icon: "calendar" },
+  { href: "/admin/paseos", label: "Paseos", icon: "route" },
   { href: "/admin/paseadores", label: "Paseadores", icon: "users" },
   { href: "/admin/planes", label: "Planes", icon: "tag" },
   { href: "/admin/clientes", label: "Clientes", icon: "user" },
