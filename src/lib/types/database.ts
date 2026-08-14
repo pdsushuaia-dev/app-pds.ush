@@ -52,6 +52,8 @@ export type Subscription = {
   plan_id: string | null;
   status: SubscriptionStatus;
   custom_price: number | null; // ARS; null = usa el precio del plan
+  mp_preapproval_id: string | null; // id de la suscripción en MercadoPago
+  mp_status: string | null; // pending | authorized | paused | cancelled
   start_date: string;
   created_at: string;
 }
