@@ -75,5 +75,16 @@ export async function POST(request: NextRequest) {
     sent++;
   }
 
-  return NextResponse.json({ ok: true, sent });
+  // Cierra paseos abandonados: si uno quedó "en curso" más de 3 horas, el
+  // paseador se olvidó de terminarlo. Se cancelan para que no queden "en vivo"
+  // indefinidamente (y no muestren tiempos absurdos como 46 h).
+  const staleBefore = new Date(now.getTime() - 3 * 60 * 60_000).toISOString();
+  const { data: closed } = await admin
+    .from("walks")
+    .update({ status: "canceled", ended_at: new Date().toISOString() })
+    .eq("status", "in_progress")
+    .lt("started_at", staleBefore)
+    .select("id");
+
+  return NextResponse.json({ ok: true, sent, closedStale: closed?.length ?? 0 });
 }

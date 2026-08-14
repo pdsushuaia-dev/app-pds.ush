@@ -10,7 +10,11 @@ import "server-only";
 const BASE = "https://api.mercadopago.com";
 
 export function mpConfigured(): boolean {
-  return Boolean(process.env.MP_ACCESS_TOKEN);
+  // Solo lo damos por configurado si hay un token REAL de MercadoPago (arrancan
+  // con "APP_USR-" en producción o "TEST-" en pruebas). Así, mientras esté el
+  // placeholder de .env.local, el botón queda deshabilitado en vez de fallar.
+  const t = process.env.MP_ACCESS_TOKEN ?? "";
+  return t.startsWith("APP_USR-") || t.startsWith("TEST-");
 }
 
 function token(): string {
