@@ -8,6 +8,8 @@ const initial: DogFormState = {};
 
 const inputCls = "input";
 
+const MAX_PHOTO_BYTES = 5 * 1024 * 1024; // 5 MB (igual que el server)
+
 export function DogForm({
   dog,
   onDone,
@@ -20,6 +22,7 @@ export function DogForm({
   const action = dog ? updateDog : createDog;
   const [state, formAction, pending] = useActionState(action, initial);
   const [preview, setPreview] = useState<string | null>(dog?.photo_url ?? null);
+  const [fileError, setFileError] = useState<string | null>(null);
 
   useEffect(() => {
     if (state.ok) onDone();
@@ -48,6 +51,15 @@ export function DogForm({
             className="block w-full text-xs file:mr-3 file:rounded-md file:border-0 file:bg-surface-2 file:px-3 file:py-1.5 file:text-sm"
             onChange={(e) => {
               const file = e.target.files?.[0];
+              if (file && file.size > MAX_PHOTO_BYTES) {
+                setFileError(
+                  "La foto pesa más de 5 MB. Sacala con menos calidad o achicala antes de subirla."
+                );
+                e.target.value = "";
+                setPreview(dog?.photo_url ?? null);
+                return;
+              }
+              setFileError(null);
               setPreview(file ? URL.createObjectURL(file) : dog?.photo_url ?? null);
             }}
           />
@@ -81,16 +93,16 @@ export function DogForm({
         className={inputCls}
       />
 
-      {state.error ? (
+      {fileError || state.error ? (
         <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
-          {state.error}
+          {fileError ?? state.error}
         </p>
       ) : null}
 
       <div className="flex gap-2">
         <button
           type="submit"
-          disabled={pending}
+          disabled={pending || fileError !== null}
           className="btn-primary"
         >
           {pending ? "Guardando…" : dog ? "Guardar cambios" : "Agregar perro"}
