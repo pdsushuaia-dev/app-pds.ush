@@ -8,7 +8,7 @@ function Svg({ children, className }: { children: ReactNode; className?: string 
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.75}
+      strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className ?? "h-5 w-5"}
@@ -47,7 +47,11 @@ export const icons = {
   ),
   droplet: (p: IconProps) => (
     <Svg className={p.className}>
-      <path d="M12 3.5s6 5.4 6 9.5a6 6 0 0 1-12 0c0-4.1 6-9.5 6-9.5Z" />
+      <path
+        fill="currentColor"
+        stroke="none"
+        d="M12 2.6s6.5 6 6.5 10.4a6.5 6.5 0 0 1-13 0C5.5 8.6 12 2.6 12 2.6Z"
+      />
     </Svg>
   ),
   route: (p: IconProps) => (

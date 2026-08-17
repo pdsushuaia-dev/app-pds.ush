@@ -51,8 +51,8 @@ function Tile({
     "flex min-h-[116px] flex-col justify-center gap-2.5 rounded-2xl border border-border bg-surface p-4 transition-colors hover:border-brand/50 active:scale-[.98]";
   const inner = (
     <>
-      <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand/15">
-        <Icon className="h-6 w-6 text-brand" />
+      <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand">
+        <Icon className="h-7 w-7 text-white" />
       </span>
       <span className="text-base font-semibold leading-tight">{label}</span>
       <span className="text-xs text-muted">{hint}</span>

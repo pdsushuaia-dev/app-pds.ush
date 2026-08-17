@@ -52,7 +52,7 @@ function StatCard({
           className={`flex h-8 w-8 items-center justify-center rounded-lg ${
             isAlert
               ? "bg-amber-500/15 text-amber-400"
-              : "bg-surface-2 text-muted"
+              : "bg-brand text-white"
           }`}
         >
           <Icon className="h-4 w-4" />
