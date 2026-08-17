@@ -47,16 +47,17 @@ export default async function AdminPaseadores() {
       <div>
         <h1 className="text-2xl font-semibold">Paseadores</h1>
         <p className="text-sm text-muted">
-          Creá la cuenta del paseador y pasale el email y la contraseña. Entra
-          directo, sin pasos extra.
+          Creá la cuenta del paseador o del bañador y pasale el email y la
+          contraseña. Entra directo, sin pasos extra.
         </p>
       </div>
 
       {/* Crear paseador (recomendado) */}
       <section>
-        <h2 className="text-lg font-semibold">Crear paseador</h2>
+        <h2 className="text-lg font-semibold">Crear paseador o bañador</h2>
         <p className="mt-1 text-sm text-muted">
-          Queda habilitado al instante. Compartile las credenciales por WhatsApp.
+          Elegí el tipo, queda habilitado al instante. Compartile las
+          credenciales por WhatsApp.
         </p>
         <div className="mt-3">
           <CreateWalkerForm />

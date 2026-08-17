@@ -20,7 +20,7 @@ export default async function PerrosPage() {
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Mis perros</h1>
+          <h1 className="text-2xl font-semibold">Mi perro</h1>
           <p className="text-sm text-muted">
             Cargá la ficha de cada perro: foto, raza, dirección de retiro y notas.
           </p>

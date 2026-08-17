@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { sendPushToUser } from "@/lib/push";
-import { slotLabel } from "@/lib/turnos";
+import { slotLabel, type TimeSlot } from "@/lib/turnos";
 
 export interface AssignState {
   ok?: boolean;
@@ -78,7 +78,7 @@ export async function assignWalker(
       .maybeSingle();
     const appt = apptRaw as {
       scheduled_at: string;
-      time_slot: "morning" | "midday" | "afternoon" | null;
+      time_slot: TimeSlot | null;
       dogs: { name: string } | null;
     } | null;
     if (appt) {

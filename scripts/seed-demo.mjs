@@ -142,7 +142,7 @@ const { data: apptToday, error: aErr } = await db
     dog_id: dog.id,
     walker_id: walker.id,
     scheduled_at: atAR(todayStr, "09:00"),
-    time_slot: "morning",
+    time_slot: "09",
     status: "done",
   })
   .select("id")
@@ -161,7 +161,7 @@ const futureRows = futureDates.map((ds, i) => ({
   dog_id: dog.id,
   walker_id: i === 2 ? null : walker.id, // uno SIN asignar (para el panel admin)
   scheduled_at: atAR(ds, "09:00"),
-  time_slot: "morning",
+  time_slot: "09",
   status: "scheduled",
 }));
 const { error: fErr } = await db.from("appointments").insert(futureRows);

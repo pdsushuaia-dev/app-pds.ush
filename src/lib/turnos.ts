@@ -5,12 +5,16 @@
  * `scheduled_at` se construye siempre con ese offset explícito.
  */
 
-export type TimeSlot = "morning" | "midday" | "afternoon";
+export type TimeSlot = "09" | "11" | "13" | "15" | "17" | "19";
 
+// Turnos cada 2 h de 09 a 21 (cada turno = 1:30 de paseo + 30 min de traslado).
 export const SLOTS: { key: TimeSlot; label: string; hour: number }[] = [
-  { key: "morning", label: "Mañana", hour: 9 },
-  { key: "midday", label: "Mediodía", hour: 13 },
-  { key: "afternoon", label: "Tarde", hour: 17 },
+  { key: "09", label: "09–11 h", hour: 9 },
+  { key: "11", label: "11–13 h", hour: 11 },
+  { key: "13", label: "13–15 h", hour: 13 },
+  { key: "15", label: "15–17 h", hour: 15 },
+  { key: "17", label: "17–19 h", hour: 17 },
+  { key: "19", label: "19–21 h", hour: 19 },
 ];
 
 /** Días de la semana con lunes primero (para la UI). value sigue 0=domingo..6=sábado. */

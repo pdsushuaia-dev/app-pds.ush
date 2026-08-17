@@ -11,6 +11,13 @@ export function CreateWalkerForm() {
   return (
     <form action={formAction} className="card flex flex-col gap-4 p-5">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <label className="flex flex-col gap-1 text-sm sm:col-span-2">
+          <span className="text-muted">Tipo</span>
+          <select name="role" required defaultValue="walker" className="input">
+            <option value="walker">Paseador</option>
+            <option value="bather">Bañador</option>
+          </select>
+        </label>
         <label className="flex flex-col gap-1 text-sm">
           <span className="text-muted">Nombre y apellido</span>
           <input

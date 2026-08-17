@@ -8,14 +8,14 @@
  *   npx supabase gen types typescript --project-id <ID> > src/lib/types/database.ts
  */
 
-export type Role = "client" | "walker" | "admin";
+export type Role = "client" | "walker" | "admin" | "bather";
 export type City = "ushuaia" | "rio_grande";
 
 export type SubscriptionStatus = "active" | "paused" | "overdue" | "canceled";
 export type AppointmentStatus = "scheduled" | "done" | "canceled";
 export type WalkStatus = "in_progress" | "done" | "canceled";
 export type PaymentStatus = "pending" | "paid" | "overdue" | "canceled";
-export type TimeSlot = "morning" | "midday" | "afternoon";
+export type TimeSlot = "09" | "11" | "13" | "15" | "17" | "19";
 
 export type Profile = {
   id: string;

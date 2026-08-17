@@ -3,9 +3,13 @@ import { NextResponse, type NextRequest } from "next/server";
 import type { Database } from "@/lib/types/database";
 
 // Prefijos protegidos y el rol requerido para cada uno.
-const ROLE_PREFIXES: { prefix: string; role: "client" | "walker" | "admin" }[] = [
+const ROLE_PREFIXES: {
+  prefix: string;
+  role: "client" | "walker" | "admin" | "bather";
+}[] = [
   { prefix: "/cliente", role: "client" },
   { prefix: "/paseador", role: "walker" },
+  { prefix: "/banador", role: "bather" },
   { prefix: "/admin", role: "admin" },
 ];
 
@@ -58,7 +62,9 @@ export async function updateSession(request: NextRequest) {
       .select("role")
       .eq("id", user.id)
       .single();
-    const profile = data as { role: "client" | "walker" | "admin" } | null;
+    const profile = data as {
+      role: "client" | "walker" | "admin" | "bather";
+    } | null;
 
     if (profile && profile.role !== match.role) {
       const dest =
@@ -66,7 +72,9 @@ export async function updateSession(request: NextRequest) {
           ? "cliente"
           : profile.role === "walker"
             ? "paseador"
-            : "admin";
+            : profile.role === "bather"
+              ? "banador"
+              : "admin";
       const url = request.nextUrl.clone();
       url.pathname = `/${dest}`;
       return NextResponse.redirect(url);

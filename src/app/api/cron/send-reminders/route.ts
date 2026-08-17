@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendPushToUser } from "@/lib/push";
-import { slotLabel } from "@/lib/turnos";
+import { slotLabel, type TimeSlot } from "@/lib/turnos";
 
 export const runtime = "nodejs";
 
@@ -15,7 +15,7 @@ interface ApptRow {
   id: string;
   walker_id: string;
   scheduled_at: string;
-  time_slot: "morning" | "midday" | "afternoon" | null;
+  time_slot: TimeSlot | null;
   dogs: { name: string; owner_id: string } | null;
 }
 

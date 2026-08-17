@@ -60,3 +60,18 @@ export async function cancelBath(id: string): Promise<BathState> {
   revalidatePath("/cliente/banos");
   return {};
 }
+
+/**
+ * El bañador marca un turno de baño como hecho.
+ */
+export async function markBathDone(id: string): Promise<BathState> {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("bath_appointments")
+    .update({ status: "done" })
+    .eq("id", id);
+  if (error) return { error: "No se pudo actualizar. Probá de nuevo." };
+
+  revalidatePath("/banador");
+  return {};
+}

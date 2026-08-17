@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { Appointment, ScheduleRule, TimeSlot } from "@/lib/types/database";
 import { slotLabel } from "@/lib/turnos";
 import { ScheduleEditor } from "./schedule-editor";
+import { CancelAppointmentButton } from "./cancel-appointment-button";
 
 // Formatos de fecha/hora en horario de Ushuaia.
 const dateFmt = new Intl.DateTimeFormat("es-AR", {
@@ -39,6 +40,7 @@ export default async function TurnosPage() {
     supabase
       .from("appointments")
       .select("*, dogs(name)")
+      .neq("status", "canceled")
       .gte("scheduled_at", nowISO)
       .order("scheduled_at", { ascending: true }),
     // Paseo en curso (RLS lo limita a los perros del dueño).
@@ -156,11 +158,16 @@ export default async function TurnosPage() {
                       <span className="text-muted">
                         {slotLabel(a.time_slot)} · {timeFmt.format(new Date(a.scheduled_at))}
                       </span>
-                      {a.walker_id == null ? (
-                        <span className="ml-auto rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-700 dark:bg-amber-950 dark:text-amber-300">
-                          Paseador: a asignar
-                        </span>
-                      ) : null}
+                      <span className="ml-auto flex items-center gap-2">
+                        {a.walker_id == null ? (
+                          <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-xs text-amber-400">
+                            A asignar
+                          </span>
+                        ) : (
+                          <span className="badge-brand">Asignado</span>
+                        )}
+                        <CancelAppointmentButton id={a.id} />
+                      </span>
                     </li>
                   ))}
                 </ul>

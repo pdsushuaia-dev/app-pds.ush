@@ -36,7 +36,7 @@ export function ScheduleEditor({
       const rule = initialRules.find((r) => r.weekday === wd.value);
       s[wd.value] = {
         selected: Boolean(rule),
-        timeSlot: rule?.timeSlot ?? "morning",
+        timeSlot: rule?.timeSlot ?? "09",
       };
     }
     return s;
@@ -125,7 +125,7 @@ export function ScheduleEditor({
                 >
                   {SLOTS.map((s) => (
                     <option key={s.key} value={s.key}>
-                      {s.label} ({String(s.hour).padStart(2, "0")}:00)
+                      {s.label}
                     </option>
                   ))}
                 </select>

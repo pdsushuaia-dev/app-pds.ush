@@ -183,7 +183,7 @@ export default async function ClienteHome() {
 
       {/* Botones grandes */}
       <div className="grid grid-cols-2 gap-3">
-        <Tile href="/cliente/perros" label="Mis perros" hint="Fichas y fotos" icon="paw" />
+        <Tile href="/cliente/perros" label="Mi perro" hint="Ficha y fotos" icon="paw" />
         <Tile href="/cliente/turnos" label="Turnos" hint={turnosHint} icon="calendar" />
         <Tile href="/cliente/planes" label="Planes" hint="Elegir plan" icon="tag" />
         <Tile href="/cliente/banos" label="Baños" hint="Agendar baño" icon="droplet" />

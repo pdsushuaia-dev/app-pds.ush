@@ -24,8 +24,12 @@ export async function createWalker(
   const password = String(formData.get("password") ?? "");
   const phone = String(formData.get("phone") ?? "").trim();
   const city = String(formData.get("city") ?? "").trim();
+  const role = String(formData.get("role") ?? "walker");
 
-  if (!fullName) return { error: "Poné el nombre del paseador." };
+  if (role !== "walker" && role !== "bather") {
+    return { error: "Elegí el tipo (paseador o bañador)." };
+  }
+  if (!fullName) return { error: "Poné el nombre." };
   if (!email || !email.includes("@")) return { error: "Email inválido." };
   if (password.length < 6)
     return { error: "La contraseña debe tener al menos 6 caracteres." };
@@ -52,7 +56,7 @@ export async function createWalker(
 
   const { error: pErr } = await admin
     .from("profiles")
-    .update({ role: "walker", full_name: fullName, phone: phone || null, city })
+    .update({ role, full_name: fullName, phone: phone || null, city })
     .eq("id", data.user.id);
   if (pErr) {
     return {

@@ -11,6 +11,8 @@ export function roleHome(role: Role | null | undefined): string {
       return "/admin";
     case "walker":
       return "/paseador";
+    case "bather":
+      return "/banador";
     case "client":
       return "/cliente";
     default:

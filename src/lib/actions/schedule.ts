@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import {
   nextOccurrences,
   scheduledAtISO,
+  SLOTS,
   type TimeSlot,
 } from "@/lib/turnos";
 
@@ -18,7 +19,7 @@ export interface ScheduleEntry {
   timeSlot: TimeSlot;
 }
 
-const VALID_SLOTS: TimeSlot[] = ["morning", "midday", "afternoon"];
+const VALID_SLOTS: TimeSlot[] = SLOTS.map((s) => s.key);
 
 /**
  * Guarda la agenda semanal de una suscripción (perro) y regenera sus turnos
