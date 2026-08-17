@@ -129,6 +129,12 @@ export const icons = {
       <path d="M4 5.5h16a1 1 0 0 1 1 1V15a1 1 0 0 1-1 1H9l-4 3.5V16H4a1 1 0 0 1-1-1V6.5a1 1 0 0 1 1-1Z" />
     </Svg>
   ),
+  clock: (p: IconProps) => (
+    <Svg className={p.className}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7.5V12l3 2" />
+    </Svg>
+  ),
 } as const;
 
 export type IconName = keyof typeof icons;

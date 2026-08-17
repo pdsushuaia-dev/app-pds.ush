@@ -179,6 +179,15 @@ export type BathAppointment = {
   created_at: string;
 }
 
+export type WalkerAvailability = {
+  id: string;
+  walker_id: string;
+  weekday: number; // 0=domingo ... 6=sábado
+  start_time: string; // 'HH:MM[:SS]'
+  end_time: string;
+  created_at: string;
+}
+
 /**
  * Tipo `Database` compatible con @supabase/ssr.
  * Provisorio: reemplazar por los tipos generados cuando exista el proyecto.
@@ -202,6 +211,7 @@ export type Database = {
       push_subscriptions: { Row: PushSubscriptionRow; Insert: Partial<PushSubscriptionRow> & { user_id: string; endpoint: string; p256dh: string; auth: string }; Update: Partial<PushSubscriptionRow>; Relationships: [] };
       walk_media: { Row: WalkMedia; Insert: Partial<WalkMedia> & { walk_id: string; storage_path: string; media_type: "photo" | "video" }; Update: Partial<WalkMedia>; Relationships: [] };
       bath_appointments: { Row: BathAppointment; Insert: Partial<BathAppointment> & { dog_id: string; scheduled_at: string }; Update: Partial<BathAppointment>; Relationships: [] };
+      walker_availability: { Row: WalkerAvailability; Insert: Partial<WalkerAvailability> & { walker_id: string; weekday: number; start_time: string; end_time: string }; Update: Partial<WalkerAvailability>; Relationships: [] };
     };
     Views: Record<string, never>;
     Functions: {
