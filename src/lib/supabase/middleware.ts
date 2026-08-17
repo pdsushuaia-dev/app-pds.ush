@@ -59,12 +59,20 @@ export async function updateSession(request: NextRequest) {
     // Verifica rol contra el prefijo.
     const { data } = await supabase
       .from("profiles")
-      .select("role")
+      .select("role, active")
       .eq("id", user.id)
       .single();
     const profile = data as {
       role: "client" | "walker" | "admin" | "bather";
+      active: boolean;
     } | null;
+
+    // Cuenta desvinculada → afuera.
+    if (profile && profile.active === false) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      return NextResponse.redirect(url);
+    }
 
     if (profile && profile.role !== match.role) {
       const dest =

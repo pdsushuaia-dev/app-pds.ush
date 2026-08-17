@@ -40,15 +40,21 @@ export async function signInAction(
   } = await supabase.auth.getUser();
 
   let dest = "/";
-  if (SAFE_REDIRECT.test(wanted)) {
-    dest = wanted;
-  } else if (user) {
+  if (user) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("role")
+      .select("role, active")
       .eq("id", user.id)
       .single();
-    dest = roleHome((profile as { role: Role } | null)?.role);
+    const p = profile as { role: Role; active: boolean } | null;
+    // Cuenta desvinculada: no puede entrar.
+    if (p && p.active === false) {
+      await supabase.auth.signOut();
+      return { error: "Tu cuenta fue desvinculada. Contactá al club." };
+    }
+    dest = SAFE_REDIRECT.test(wanted) ? wanted : roleHome(p?.role);
+  } else if (SAFE_REDIRECT.test(wanted)) {
+    dest = wanted;
   }
 
   redirect(dest);

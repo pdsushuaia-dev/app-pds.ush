@@ -1,14 +1,36 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useActionState } from "react";
 import { signInAction, type AuthState } from "@/lib/actions/auth";
 import { APP_NAME } from "@/lib/constants";
 
 const initial: AuthState = {};
+const KEY = "pds_recordar_email";
 
 export function LoginForm({ redirect = "" }: { redirect?: string }) {
   const [state, formAction, pending] = useActionState(signInAction, initial);
+  const [email, setEmail] = useState("");
+  const [remember, setRemember] = useState(true);
+
+  // Prefill del email guardado (solo en el navegador).
+  useEffect(() => {
+    const saved =
+      typeof window !== "undefined" ? localStorage.getItem(KEY) : null;
+    if (saved) {
+      queueMicrotask(() => {
+        setEmail(saved);
+        setRemember(true);
+      });
+    }
+  }, []);
+
+  // Guardar / borrar el email según el checkbox.
+  useEffect(() => {
+    if (remember && email) localStorage.setItem(KEY, email);
+    else if (!remember) localStorage.removeItem(KEY);
+  }, [remember, email]);
 
   return (
     <main className="mx-auto flex min-h-dvh max-w-sm flex-col justify-center px-6">
@@ -29,6 +51,8 @@ export function LoginForm({ redirect = "" }: { redirect?: string }) {
           autoComplete="email"
           required
           className="input"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <input
           name="password"
@@ -39,17 +63,23 @@ export function LoginForm({ redirect = "" }: { redirect?: string }) {
           className="input"
         />
 
+        <label className="flex items-center gap-2 text-sm text-muted">
+          <input
+            type="checkbox"
+            checked={remember}
+            onChange={(e) => setRemember(e.target.checked)}
+            className="size-4"
+          />
+          Recordar mi email
+        </label>
+
         {state.error ? (
-          <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
+          <p className="rounded-md bg-red-950 px-3 py-2 text-sm text-red-300">
             {state.error}
           </p>
         ) : null}
 
-        <button
-          type="submit"
-          disabled={pending}
-          className="btn-primary"
-        >
+        <button type="submit" disabled={pending} className="btn-primary">
           {pending ? "Ingresando…" : "Ingresar"}
         </button>
       </form>

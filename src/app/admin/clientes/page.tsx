@@ -4,12 +4,14 @@ import { formatARS } from "@/lib/format";
 import { CITIES } from "@/lib/constants";
 import { PriceEditor } from "./price-editor";
 import { PaymentControl } from "./payment-control";
+import { UnlinkButton } from "@/components/UnlinkButton";
 
 interface ClientRow {
   id: string;
   full_name: string | null;
   phone: string | null;
   city: string | null;
+  active: boolean;
 }
 interface DogRow {
   id: string;
@@ -58,7 +60,7 @@ export default async function AdminClientes({
   const [clientsRes, dogsRes, subsRes, paysRes] = await Promise.all([
     supabase
       .from("profiles")
-      .select("id, full_name, phone, city")
+      .select("id, full_name, phone, city, active")
       .eq("role", "client")
       .order("full_name", { ascending: true }),
     supabase.from("dogs").select("id, owner_id, name"),
@@ -167,7 +169,7 @@ export default async function AdminClientes({
             const ownerDogs = dogsByOwner.get(c.id) ?? [];
             return (
               <div key={c.id} className="card p-4">
-                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                   <span className="font-semibold">
                     {c.full_name ?? "(sin nombre)"}
                   </span>
@@ -179,6 +181,14 @@ export default async function AdminClientes({
                   {c.phone ? (
                     <span className="text-xs text-muted">{c.phone}</span>
                   ) : null}
+                  {!c.active ? (
+                    <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-xs text-red-400">
+                      Desvinculado
+                    </span>
+                  ) : null}
+                  <span className="ml-auto">
+                    <UnlinkButton userId={c.id} active={c.active} />
+                  </span>
                 </div>
 
                 {ownerDogs.length === 0 ? (

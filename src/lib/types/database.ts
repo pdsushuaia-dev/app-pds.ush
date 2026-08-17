@@ -23,6 +23,7 @@ export type Profile = {
   full_name: string | null;
   phone: string | null;
   city: City | null;
+  active: boolean;
   created_at: string;
 }
 

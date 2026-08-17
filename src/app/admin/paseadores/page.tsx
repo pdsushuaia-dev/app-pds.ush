@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { CreateInviteButton } from "./create-invite-button";
 import { CreateWalkerForm } from "./create-walker-form";
+import { UnlinkButton } from "@/components/UnlinkButton";
 
 const dateFmt = new Intl.DateTimeFormat("es-AR", {
   timeZone: "America/Argentina/Ushuaia",
@@ -14,6 +15,8 @@ interface WalkerRow {
   full_name: string | null;
   phone: string | null;
   city: string | null;
+  role: string;
+  active: boolean;
 }
 interface InviteRow {
   id: string;
@@ -29,8 +32,8 @@ export default async function AdminPaseadores() {
   const [walkersRes, invitesRes] = await Promise.all([
     supabase
       .from("profiles")
-      .select("id, full_name, phone, city")
-      .eq("role", "walker")
+      .select("id, full_name, phone, city, role, active")
+      .in("role", ["walker", "bather"])
       .order("full_name", { ascending: true }),
     supabase
       .from("walker_invites")
@@ -124,17 +127,17 @@ export default async function AdminPaseadores() {
         )}
       </section>
 
-      {/* Paseadores actuales */}
+      {/* Equipo (paseadores y bañadores) */}
       <section>
         <h2 className="text-lg font-semibold">
-          Paseadores activos{" "}
+          Equipo{" "}
           <span className="text-sm font-normal text-muted">
             ({walkers.length})
           </span>
         </h2>
         {walkers.length === 0 ? (
           <p className="mt-2 rounded-xl border border-dashed border-border p-6 text-sm text-muted">
-            Todavía no hay paseadores.
+            Todavía no hay paseadores ni bañadores.
           </p>
         ) : (
           <ul className="mt-3 flex flex-col gap-2">
@@ -146,9 +149,18 @@ export default async function AdminPaseadores() {
                 <span className="font-medium">
                   {w.full_name ?? "(sin nombre)"}
                 </span>
-                {w.phone ? (
-                  <span className="text-muted">{w.phone}</span>
+                <span className="rounded-full bg-surface-2 px-2 py-0.5 text-xs text-muted">
+                  {w.role === "bather" ? "Bañador" : "Paseador"}
+                </span>
+                {w.phone ? <span className="text-muted">{w.phone}</span> : null}
+                {!w.active ? (
+                  <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-xs text-red-400">
+                    Desvinculado
+                  </span>
                 ) : null}
+                <span className="ml-auto">
+                  <UnlinkButton userId={w.id} active={w.active} />
+                </span>
               </li>
             ))}
           </ul>
