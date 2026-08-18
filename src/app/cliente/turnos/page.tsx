@@ -4,6 +4,7 @@ import type { Appointment, ScheduleRule, TimeSlot } from "@/lib/types/database";
 import { slotLabel } from "@/lib/turnos";
 import { ScheduleEditor } from "./schedule-editor";
 import { CancelAppointmentButton } from "./cancel-appointment-button";
+import { RescheduleAppointmentButton } from "./reschedule-appointment-button";
 
 // Formatos de fecha/hora en horario de Ushuaia.
 const dateFmt = new Intl.DateTimeFormat("es-AR", {
@@ -16,6 +17,13 @@ const timeFmt = new Intl.DateTimeFormat("es-AR", {
   timeZone: "America/Argentina/Ushuaia",
   hour: "2-digit",
   minute: "2-digit",
+});
+// Fecha en formato YYYY-MM-DD (hora de Ushuaia) para el input de reprogramar.
+const isoDateFmt = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "America/Argentina/Ushuaia",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
 });
 
 interface SubRow {
@@ -158,7 +166,7 @@ export default async function TurnosPage() {
                       <span className="text-muted">
                         {slotLabel(a.time_slot)} · {timeFmt.format(new Date(a.scheduled_at))}
                       </span>
-                      <span className="ml-auto flex items-center gap-2">
+                      <span className="ml-auto flex flex-wrap items-center justify-end gap-2">
                         {a.walker_id == null ? (
                           <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-xs text-amber-400">
                             A asignar
@@ -166,6 +174,11 @@ export default async function TurnosPage() {
                         ) : (
                           <span className="badge-brand">Asignado</span>
                         )}
+                        <RescheduleAppointmentButton
+                          id={a.id}
+                          currentDate={isoDateFmt.format(new Date(a.scheduled_at))}
+                          currentSlot={a.time_slot ?? "09"}
+                        />
                         <CancelAppointmentButton id={a.id} />
                       </span>
                     </li>

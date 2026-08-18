@@ -42,6 +42,8 @@ export function ScheduleEditor({
     return s;
   });
 
+  const [bulkSlot, setBulkSlot] = useState<TimeSlot>("13");
+
   const [state, formAction, pending] = useActionState(
     saveScheduleAction,
     initial
@@ -73,6 +75,31 @@ export function ScheduleEditor({
     }));
   }
 
+  /** Marca esos días con la franja `bulkSlot` y deselecciona el resto. */
+  function applyToDays(weekdays: number[]) {
+    setDays((prev) => {
+      const next: DayState = { ...prev };
+      for (const wd of WEEKDAYS) {
+        const on = weekdays.includes(wd.value);
+        next[wd.value] = {
+          selected: on,
+          timeSlot: on ? bulkSlot : prev[wd.value].timeSlot,
+        };
+      }
+      return next;
+    });
+  }
+
+  function clearAll() {
+    setDays((prev) => {
+      const next: DayState = { ...prev };
+      for (const wd of WEEKDAYS) {
+        next[wd.value] = { ...prev[wd.value], selected: false };
+      }
+      return next;
+    });
+  }
+
   return (
     <form
       action={formAction}
@@ -100,6 +127,50 @@ export function ScheduleEditor({
             </>
           ) : null}
         </span>
+      </div>
+
+      {/* Atajo: mismo horario todos los días (para agenda fija) */}
+      <div className="rounded-lg bg-surface-2 p-3">
+        <p className="text-sm font-medium">¿Mismo horario todos los días?</p>
+        <div className="mt-2 flex flex-wrap items-center gap-2">
+          <select
+            value={bulkSlot}
+            onChange={(e) => setBulkSlot(e.target.value as TimeSlot)}
+            className="input"
+            aria-label="Franja para todos los días"
+          >
+            {SLOTS.map((s) => (
+              <option key={s.key} value={s.key}>
+                {s.label}
+              </option>
+            ))}
+          </select>
+          <button
+            type="button"
+            onClick={() => applyToDays([1, 2, 3, 4, 5])}
+            className="btn-secondary px-3 py-1.5 text-xs"
+          >
+            Lunes a viernes
+          </button>
+          <button
+            type="button"
+            onClick={() => applyToDays([1, 2, 3, 4, 5, 6, 0])}
+            className="btn-secondary px-3 py-1.5 text-xs"
+          >
+            Todos los días
+          </button>
+          <button
+            type="button"
+            onClick={clearAll}
+            className="rounded-lg border border-border px-3 py-1.5 text-xs"
+          >
+            Limpiar
+          </button>
+        </div>
+        <p className="mt-2 text-xs text-muted">
+          Aplica esa hora a todos los días de una vez. Después podés ajustar día
+          por día abajo si algún día va a otra hora.
+        </p>
       </div>
 
       <div className="flex flex-col divide-y divide-border">
