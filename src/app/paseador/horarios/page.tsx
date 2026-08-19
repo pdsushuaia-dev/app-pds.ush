@@ -34,8 +34,8 @@ export default async function HorariosPage() {
         <h1 className="text-2xl font-semibold">Mis horarios</h1>
         <p className="mt-1 text-sm text-muted">
           Cargá los días y las horas en las que trabajás. Cada turno dura 2 h
-          (1:30 de paseo + 30 min de traslado e hidratación). El admin solo te
-          va a asignar paseos dentro de tus horarios.
+          (1:30 de paseo + 30 min de traslado e hidratación). Los clientes solo
+          van a poder pedirte paseos dentro de tus horarios.
         </p>
       </header>
 

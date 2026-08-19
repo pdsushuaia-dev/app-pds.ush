@@ -40,17 +40,21 @@ export async function startWalk(appointmentId: string): Promise<StartWalkState> 
   // El turno tiene que estar asignado a este paseador.
   const { data: apptRaw } = await supabase
     .from("appointments")
-    .select("id, dog_id, walker_id")
+    .select("id, dog_id, walker_id, status")
     .eq("id", appointmentId)
     .maybeSingle();
   const appt = apptRaw as {
     id: string;
     dog_id: string;
     walker_id: string | null;
+    status: string;
   } | null;
   if (!appt) return { error: "Turno no encontrado." };
   if (appt.walker_id !== user.id) {
     return { error: "Ese turno no está asignado a vos." };
+  }
+  if (appt.status !== "scheduled") {
+    return { error: "Ese turno no está confirmado." };
   }
 
   // ¿Ya hay un paseo en curso para este turno? No dupliques.
