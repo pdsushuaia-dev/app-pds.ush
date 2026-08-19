@@ -6,6 +6,7 @@ import { icons } from "@/components/icons";
 
 const tabs = [
   { href: "/cliente", label: "Inicio", icon: "home" as const },
+  { href: "/cliente/reservar", label: "Reservar", icon: "plus" as const },
   { href: "/cliente/turnos", label: "Turnos", icon: "calendar" as const },
   { href: "/cliente/banos", label: "Baños", icon: "droplet" as const },
   { href: "/cliente/perfil", label: "Perfil", icon: "user" as const },

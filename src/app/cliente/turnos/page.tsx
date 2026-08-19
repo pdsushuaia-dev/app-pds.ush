@@ -1,12 +1,9 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import type { Appointment, ScheduleRule, TimeSlot } from "@/lib/types/database";
+import type { Appointment } from "@/lib/types/database";
 import { slotLabel } from "@/lib/turnos";
-import { ScheduleEditor } from "./schedule-editor";
 import { CancelAppointmentButton } from "./cancel-appointment-button";
-import { RescheduleAppointmentButton } from "./reschedule-appointment-button";
 
-// Formatos de fecha/hora en horario de Ushuaia.
 const dateFmt = new Intl.DateTimeFormat("es-AR", {
   timeZone: "America/Argentina/Ushuaia",
   weekday: "long",
@@ -18,68 +15,51 @@ const timeFmt = new Intl.DateTimeFormat("es-AR", {
   hour: "2-digit",
   minute: "2-digit",
 });
-// Fecha en formato YYYY-MM-DD (hora de Ushuaia) para el input de reprogramar.
-const isoDateFmt = new Intl.DateTimeFormat("en-CA", {
-  timeZone: "America/Argentina/Ushuaia",
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit",
-});
 
-interface SubRow {
-  id: string;
-  dog_id: string;
-  dogs: { name: string } | null;
-  plans: { name: string; days_per_week: number | null } | null;
-}
 type ApptRow = Appointment & { dogs: { name: string } | null };
+interface Walker {
+  id: string;
+  full_name: string | null;
+  photo_url: string | null;
+}
 
 export default async function TurnosPage() {
   const supabase = await createClient();
   const nowISO = new Date().toISOString();
 
-  const [subsRes, rulesRes, apptsRes, liveRes] = await Promise.all([
-    supabase
-      .from("subscriptions")
-      .select("id, dog_id, dogs(name), plans(name, days_per_week)")
-      .eq("status", "active"),
-    // RLS limita las reglas a las de los perros del dueño.
-    supabase.from("schedule_rules").select("*"),
+  const [apptsRes, liveRes] = await Promise.all([
     supabase
       .from("appointments")
       .select("*, dogs(name)")
-      .neq("status", "canceled")
+      .in("status", ["requested", "scheduled", "rejected"])
       .gte("scheduled_at", nowISO)
       .order("scheduled_at", { ascending: true }),
-    // Paseo en curso (RLS lo limita a los perros del dueño).
-    supabase
-      .from("walks")
-      .select("id, dogs(name)")
-      .eq("status", "in_progress"),
+    supabase.from("walks").select("id, dogs(name)").eq("status", "in_progress"),
   ]);
 
-  const subs = (subsRes.data ?? []) as unknown as SubRow[];
-  const rules = (rulesRes.data ?? []) as ScheduleRule[];
   const appts = (apptsRes.data ?? []) as unknown as ApptRow[];
   const liveWalks = (liveRes.data ?? []) as unknown as {
     id: string;
     dogs: { name: string } | null;
   }[];
 
-  // Reglas por suscripción.
-  const rulesBySub = new Map<string, { weekday: number; timeSlot: TimeSlot }[]>();
-  for (const r of rules) {
-    if (r.time_slot == null) continue;
-    const list = rulesBySub.get(r.subscription_id) ?? [];
-    list.push({ weekday: r.weekday, timeSlot: r.time_slot });
-    rulesBySub.set(r.subscription_id, list);
+  // Info pública (foto + nombre) de los paseadores involucrados.
+  const walkerIds = [
+    ...new Set(appts.map((a) => a.walker_id).filter((x): x is string => !!x)),
+  ];
+  const walkerMap = new Map<string, Walker>();
+  if (walkerIds.length > 0) {
+    const { data: wData } = await supabase
+      .from("public_walkers")
+      .select("id, full_name, photo_url")
+      .in("id", walkerIds);
+    for (const w of (wData ?? []) as Walker[]) walkerMap.set(w.id, w);
   }
 
-  // Próximos turnos agrupados por fecha.
+  // Agrupar por fecha.
   const groups: { key: string; label: string; items: ApptRow[] }[] = [];
   for (const a of appts) {
-    const d = new Date(a.scheduled_at);
-    const label = dateFmt.format(d);
+    const label = dateFmt.format(new Date(a.scheduled_at));
     let g = groups.find((x) => x.label === label);
     if (!g) {
       g = { key: label, label, items: [] };
@@ -90,12 +70,17 @@ export default async function TurnosPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <div>
-        <h1 className="text-2xl font-semibold">Agenda de turnos</h1>
-        <p className="text-sm text-muted">
-          Elegí los días y la franja de cada perro. Generamos tus turnos de las
-          próximas 4 semanas; el paseador se asigna después.
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold">Mis turnos</h1>
+          <p className="text-sm text-muted">
+            Pedís un paseo y el paseador lo confirma. Acá ves el estado de cada
+            uno.
+          </p>
+        </div>
+        <Link href="/cliente/reservar" className="btn-primary">
+          + Reservar un paseo
+        </Link>
       </div>
 
       {/* Paseo en curso */}
@@ -108,87 +93,102 @@ export default async function TurnosPage() {
           <span className="font-medium text-brand">
             🟢 {w.dogs?.name ?? "Tu perro"} está de paseo ahora
           </span>
-          <span className="btn-primary">
-            Ver en vivo
-          </span>
+          <span className="btn-primary">Ver en vivo</span>
         </Link>
       ))}
 
-      {/* Mi agenda semanal */}
-      <section>
-        <h2 className="text-lg font-semibold">Mi agenda semanal</h2>
-        {subs.length === 0 ? (
-          <p className="mt-2 rounded-xl border border-dashed border-border p-6 text-sm text-muted">
-            No tenés suscripciones activas. Elegí un plan en{" "}
-            <Link href="/cliente/planes" className="underline">
-              Planes
-            </Link>
-            .
+      {groups.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-border p-8 text-center">
+          <p className="text-sm text-muted">
+            Todavía no tenés turnos. Reservá tu primer paseo y elegí quién lo
+            lleva.
           </p>
-        ) : (
-          <div className="mt-3 flex flex-col gap-4">
-            {subs.map((s) => (
-              <ScheduleEditor
-                key={s.id}
-                subscriptionId={s.id}
-                dogName={s.dogs?.name ?? "Perro"}
-                planName={s.plans?.name ?? "Plan"}
-                daysPerWeek={s.plans?.days_per_week ?? null}
-                initialRules={rulesBySub.get(s.id) ?? []}
-              />
-            ))}
-          </div>
-        )}
-      </section>
-
-      {/* Próximos turnos */}
-      <section>
-        <h2 className="text-lg font-semibold">Próximos turnos</h2>
-        {groups.length === 0 ? (
-          <p className="mt-2 rounded-xl border border-dashed border-border p-6 text-sm text-muted">
-            Todavía no hay turnos generados. Guardá tu agenda semanal para
-            crearlos.
-          </p>
-        ) : (
-          <div className="mt-3 flex flex-col gap-5">
-            {groups.map((g) => (
-              <div key={g.key}>
-                <h3 className="text-sm font-medium capitalize text-muted">
-                  {g.label}
-                </h3>
-                <ul className="mt-2 flex flex-col gap-2">
-                  {g.items.map((a) => (
+          <Link
+            href="/cliente/reservar"
+            className="btn-primary mt-4 inline-block"
+          >
+            Reservar un paseo
+          </Link>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-5">
+          {groups.map((g) => (
+            <div key={g.key}>
+              <h3 className="text-sm font-medium capitalize text-muted">
+                {g.label}
+              </h3>
+              <ul className="mt-2 flex flex-col gap-2">
+                {g.items.map((a) => {
+                  const w = a.walker_id ? walkerMap.get(a.walker_id) : null;
+                  return (
                     <li
                       key={a.id}
-                      className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-border px-3 py-2 text-sm"
+                      className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-border px-3 py-2 text-sm"
                     >
-                      <span className="font-medium">{a.dogs?.name ?? "Perro"}</span>
-                      <span className="text-muted">
-                        {slotLabel(a.time_slot)} · {timeFmt.format(new Date(a.scheduled_at))}
-                      </span>
-                      <span className="ml-auto flex flex-wrap items-center justify-end gap-2">
-                        {a.walker_id == null ? (
-                          <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-xs text-amber-400">
-                            A asignar
-                          </span>
-                        ) : (
-                          <span className="badge-brand">Asignado</span>
-                        )}
-                        <RescheduleAppointmentButton
-                          id={a.id}
-                          currentDate={isoDateFmt.format(new Date(a.scheduled_at))}
-                          currentSlot={a.time_slot ?? "09"}
+                      {w ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={w.photo_url ?? "/dog-placeholder.svg"}
+                          alt=""
+                          className="size-9 shrink-0 rounded-full object-cover ring-1 ring-border"
                         />
-                        <CancelAppointmentButton id={a.id} />
+                      ) : null}
+                      <div className="flex flex-col">
+                        <span className="font-medium">
+                          {a.dogs?.name ?? "Perro"}
+                          {w?.full_name ? (
+                            <span className="font-normal text-muted">
+                              {" "}
+                              · con {w.full_name}
+                            </span>
+                          ) : null}
+                        </span>
+                        <span className="text-muted">
+                          {slotLabel(a.time_slot)} ·{" "}
+                          {timeFmt.format(new Date(a.scheduled_at))}
+                        </span>
+                      </div>
+
+                      <span className="ml-auto flex flex-wrap items-center justify-end gap-2">
+                        <StatusBadge status={a.status} />
+                        {a.status === "rejected" ? (
+                          <Link
+                            href="/cliente/reservar"
+                            className="rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white"
+                          >
+                            Pedir a otro
+                          </Link>
+                        ) : (
+                          <CancelAppointmentButton id={a.id} />
+                        )}
                       </span>
                     </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
+  );
+}
+
+function StatusBadge({ status }: { status: Appointment["status"] }) {
+  if (status === "scheduled") {
+    return <span className="badge-brand">Confirmado</span>;
+  }
+  if (status === "rejected") {
+    return (
+      <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-xs text-red-400">
+        Rechazado
+      </span>
+    );
+  }
+  // requested
+  return (
+    <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-xs text-amber-400">
+      Esperando confirmación
+    </span>
   );
 }

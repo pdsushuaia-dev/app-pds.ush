@@ -30,7 +30,7 @@ const onboarding: {
 }[] = [
   { n: 1, icon: "paw", title: "Cargá la ficha de tu perro", desc: "Nombre, raza, foto y dirección.", href: "/cliente/perros" },
   { n: 2, icon: "tag", title: "Elegí un plan", desc: "Los paseos por semana que quieras.", href: "/cliente/planes" },
-  { n: 3, icon: "calendar", title: "Agendá los turnos", desc: "Elegí días y horario.", href: "/cliente/turnos" },
+  { n: 3, icon: "plus", title: "Reservá tu primer paseo", desc: "Elegí día, hora y paseador.", href: "/cliente/reservar" },
 ];
 
 function Tile({
@@ -83,6 +83,7 @@ export default async function ClienteHome() {
     supabase
       .from("appointments")
       .select("*, dogs(name)")
+      .in("status", ["requested", "scheduled"])
       .gte("scheduled_at", nowISO)
       .order("scheduled_at", { ascending: true })
       .limit(1),
@@ -180,6 +181,28 @@ export default async function ClienteHome() {
           </ol>
         </section>
       ) : null}
+
+      {/* CTA principal: reservar */}
+      <Link
+        href="/cliente/reservar"
+        className="flex items-center gap-3 rounded-2xl border border-brand/40 bg-brand/10 px-5 py-4 transition-colors hover:border-brand/70 active:scale-[.99]"
+      >
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand text-white">
+          {(() => {
+            const Plus = icons.plus;
+            return <Plus className="h-6 w-6" />;
+          })()}
+        </span>
+        <span className="flex-1">
+          <span className="block text-base font-semibold text-brand">
+            Reservar un paseo
+          </span>
+          <span className="block text-sm text-muted">
+            Elegí día, hora y quién lo lleva
+          </span>
+        </span>
+        <span className="text-2xl leading-none text-brand">›</span>
+      </Link>
 
       {/* Botones grandes */}
       <div className="grid grid-cols-2 gap-3">

@@ -6,6 +6,7 @@ import { APP_NAME } from "@/lib/constants";
 
 const items: NavItem[] = [
   { href: "/cliente", label: "Inicio", icon: "home" },
+  { href: "/cliente/reservar", label: "Reservar", icon: "plus" },
   { href: "/cliente/perros", label: "Mi perro", icon: "paw" },
   { href: "/cliente/planes", label: "Planes", icon: "tag" },
   { href: "/cliente/turnos", label: "Turnos", icon: "calendar" },

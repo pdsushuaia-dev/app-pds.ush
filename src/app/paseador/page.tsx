@@ -4,6 +4,7 @@ import type { TimeSlot } from "@/lib/types/database";
 import { slotLabel } from "@/lib/turnos";
 import { EnableNotifications } from "@/components/EnableNotifications";
 import { StartWalkButton } from "./start-walk-button";
+import { RequestActions } from "./request-actions";
 
 const dateFmt = new Intl.DateTimeFormat("es-AR", {
   timeZone: "America/Argentina/Ushuaia",
@@ -33,7 +34,14 @@ export default async function PaseadorHome() {
   from.setHours(0, 0, 0, 0);
   const fromISO = from.toISOString();
 
-  const [apptsRes, walksRes, doneRes] = await Promise.all([
+  const [requestsRes, apptsRes, walksRes, doneRes] = await Promise.all([
+    // Solicitudes pendientes que le mandaron al paseador (modelo marketplace).
+    supabase
+      .from("appointments")
+      .select("id, dog_id, scheduled_at, time_slot, dogs(name, photo_url)")
+      .eq("status", "requested")
+      .gte("scheduled_at", fromISO)
+      .order("scheduled_at", { ascending: true }),
     // RLS appts_walker_select limita a los turnos asignados al paseador.
     supabase
       .from("appointments")
@@ -55,6 +63,7 @@ export default async function PaseadorHome() {
       .order("started_at", { ascending: false }),
   ]);
 
+  const requests = (requestsRes.data ?? []) as unknown as ApptRow[];
   const appts = (apptsRes.data ?? []) as unknown as ApptRow[];
   const walks = (walksRes.data ?? []) as { id: string; appointment_id: string | null }[];
   const doneWalks = (doneRes.data ?? []) as unknown as {
@@ -90,6 +99,39 @@ export default async function PaseadorHome() {
       </div>
 
       <EnableNotifications />
+
+      {/* Solicitudes pendientes (marketplace) */}
+      {requests.length > 0 ? (
+        <section className="rounded-2xl border border-amber-500/40 bg-amber-500/5 p-4">
+          <h2 className="text-lg font-semibold">
+            Solicitudes{" "}
+            <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-sm text-amber-400">
+              {requests.length}
+            </span>
+          </h2>
+          <p className="mt-1 text-sm text-muted">
+            Un cliente te pidió estos paseos. Aceptá o rechazá.
+          </p>
+          <ul className="mt-3 flex flex-col gap-2">
+            {requests.map((a) => (
+              <li
+                key={a.id}
+                className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-border bg-surface px-3 py-2.5 text-sm"
+              >
+                <span className="font-medium">{a.dogs?.name ?? "Perro"}</span>
+                <span className="text-muted">
+                  {dateFmt.format(new Date(a.scheduled_at))} ·{" "}
+                  {slotLabel(a.time_slot)} ·{" "}
+                  {timeFmt.format(new Date(a.scheduled_at))}
+                </span>
+                <span className="ml-auto">
+                  <RequestActions id={a.id} />
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       {groups.length === 0 ? (
         <div className="rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted">
