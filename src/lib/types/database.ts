@@ -12,7 +12,12 @@ export type Role = "client" | "walker" | "admin" | "bather";
 export type City = "ushuaia" | "rio_grande";
 
 export type SubscriptionStatus = "active" | "paused" | "overdue" | "canceled";
-export type AppointmentStatus = "scheduled" | "done" | "canceled";
+export type AppointmentStatus =
+  | "requested"
+  | "scheduled"
+  | "rejected"
+  | "done"
+  | "canceled";
 export type WalkStatus = "in_progress" | "done" | "canceled";
 export type PaymentStatus = "pending" | "paid" | "overdue" | "canceled";
 export type TimeSlot = "09" | "11" | "13" | "15" | "17" | "19";
@@ -23,6 +28,7 @@ export type Profile = {
   full_name: string | null;
   phone: string | null;
   city: City | null;
+  photo_url: string | null;
   active: boolean;
   created_at: string;
 }
@@ -75,6 +81,7 @@ export type Appointment = {
   time_slot: TimeSlot | null;
   status: AppointmentStatus;
   reminded_at: string | null;
+  responded_at: string | null;
   created_at: string;
 }
 
@@ -214,7 +221,12 @@ export type Database = {
       bath_appointments: { Row: BathAppointment; Insert: Partial<BathAppointment> & { dog_id: string; scheduled_at: string }; Update: Partial<BathAppointment>; Relationships: [] };
       walker_availability: { Row: WalkerAvailability; Insert: Partial<WalkerAvailability> & { walker_id: string; weekday: number; start_time: string; end_time: string }; Update: Partial<WalkerAvailability>; Relationships: [] };
     };
-    Views: Record<string, never>;
+    Views: {
+      public_walkers: {
+        Row: { id: string; full_name: string | null; photo_url: string | null };
+        Relationships: [];
+      };
+    };
     Functions: {
       user_role: { Args: Record<string, never>; Returns: string };
       is_admin: { Args: Record<string, never>; Returns: boolean };
@@ -235,6 +247,15 @@ export type Database = {
           duration_s: number | null;
           media_count: number;
         }[];
+      };
+      available_walkers: {
+        Args: {
+          p_scheduled_at: string;
+          p_weekday: number;
+          p_slot_start: string;
+          p_slot_end: string;
+        };
+        Returns: { id: string; full_name: string | null; photo_url: string | null }[];
       };
     };
     Enums: Record<string, never>;

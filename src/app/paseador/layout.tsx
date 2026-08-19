@@ -5,6 +5,7 @@ import { getProfile } from "@/lib/auth";
 const items: NavItem[] = [
   { href: "/paseador", label: "Mi agenda", icon: "calendar" },
   { href: "/paseador/horarios", label: "Mis horarios", icon: "clock" },
+  { href: "/paseador/perfil", label: "Mi perfil", icon: "user" },
 ];
 
 export default async function PaseadorLayout({ children }: { children: React.ReactNode }) {
