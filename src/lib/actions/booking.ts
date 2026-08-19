@@ -107,6 +107,5 @@ export async function bookWalk(
   });
 
   revalidatePath("/cliente/turnos");
-  revalidatePath("/cliente/reservar");
   return { ok: true };
 }
