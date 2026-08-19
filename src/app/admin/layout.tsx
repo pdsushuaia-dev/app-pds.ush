@@ -2,15 +2,14 @@ import { RoleNav, type NavItem } from "@/components/RoleNav";
 import { PushRegistrar } from "@/components/PushRegistrar";
 import { getProfile } from "@/lib/auth";
 
+// Modelo marketplace: el admin ya NO asigna turnos. Solo supervisa (en vivo),
+// gestiona planes y da de alta / desvincula personal y clientes.
 const items: NavItem[] = [
   { href: "/admin", label: "Dashboard", icon: "grid" },
-  { href: "/admin/turnos", label: "Turnos", icon: "calendar" },
-  { href: "/admin/paseos", label: "Paseos", icon: "route" },
+  { href: "/admin/paseos", label: "En vivo", icon: "route" },
   { href: "/admin/paseadores", label: "Paseadores", icon: "users" },
-  { href: "/admin/planes", label: "Planes", icon: "tag" },
   { href: "/admin/clientes", label: "Clientes", icon: "user" },
-  { href: "/admin/resenas", label: "Reseñas", icon: "star" },
-  { href: "/admin/banners", label: "Banners", icon: "bell" },
+  { href: "/admin/planes", label: "Planes", icon: "tag" },
 ];
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {

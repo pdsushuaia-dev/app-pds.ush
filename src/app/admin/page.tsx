@@ -91,8 +91,6 @@ export default async function AdminHome() {
   const [
     paseosHoy,
     agTotal,
-    agSin,
-    agCon,
     walkersCount,
     clientsCount,
     dogsCount,
@@ -109,18 +107,6 @@ export default async function AdminHome() {
       .select("*", { count: "exact", head: true })
       .eq("status", "scheduled")
       .gte("scheduled_at", nowISO),
-    supabase
-      .from("appointments")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "scheduled")
-      .gte("scheduled_at", nowISO)
-      .is("walker_id", null),
-    supabase
-      .from("appointments")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "scheduled")
-      .gte("scheduled_at", nowISO)
-      .not("walker_id", "is", null),
     supabase
       .from("profiles")
       .select("*", { count: "exact", head: true })
@@ -164,19 +150,11 @@ export default async function AdminHome() {
           href="/admin/paseos"
         />
         <StatCard
-          label="Turnos agendados"
+          label="Turnos confirmados"
           value={agTotal.count ?? 0}
           icon="calendar"
-          hint={`${agCon.count ?? 0} asignados`}
-          href="/admin/turnos"
-        />
-        <StatCard
-          label="Sin asignar"
-          value={agSin.count ?? 0}
-          icon="bell"
-          accent
-          hint="requieren paseador"
-          href="/admin/turnos"
+          hint="próximos"
+          href="/admin/paseos"
         />
         <StatCard
           label="Paseadores"
